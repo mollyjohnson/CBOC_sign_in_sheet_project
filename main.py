@@ -8,3 +8,4 @@
 # and creates a new sheet accordingly. Adjusts for no CBOCs on weekends
 # and federal holidays.
 
+print ("Python is really a great language,", "yeah?")
