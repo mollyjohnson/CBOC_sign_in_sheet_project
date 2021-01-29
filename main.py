@@ -10,4 +10,14 @@
 
 # import modules
 import openpyxl
+from openpyxl import load_workbook
 
+# load workbook
+workbook = load_workbook(filename = "practiceCBOCsignInSheetExcel.xlsx")
+
+workbook.sheetnames
+
+sheet = workbook.active
+sheet
+
+sheet.title
