@@ -11,13 +11,15 @@
 # import modules
 import openpyxl
 from openpyxl import load_workbook
+import xlsxwriter
 
-# load workbook
-workbook = load_workbook(filename = "practiceCBOCsignInSheetExcel.xlsx")
+#workbook = load_workbook(filename = "practiceCBOCsignInSheetExcel.xlsx")
+#workbook.sheetnames
+#sheet = workbook.active
+#sheet
+#sheet.title
 
-workbook.sheetnames
-
-sheet = workbook.active
-sheet
-
-sheet.title
+#workbook = xlsxwriter.Workbook('hello.xlsx')
+#worksheet = workbook.add_worksheet()
+#worksheet.write('A1', 'Hello world')
+#workbook.close()
