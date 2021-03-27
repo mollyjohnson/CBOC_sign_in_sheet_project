@@ -35,7 +35,7 @@ print('Day of Month', startDateObj.day)
 print('Day of Week (number): ', startDateObj.weekday())
 
 # to get name of day from date
-print('Day of Week (name): ', calendar.day_name[startDateObj.weekday()])
+print('Day of Week (name): ', calendar.day_abbr[startDateObj.weekday()])
 
 # to get name of month from date
 print('Month name: ', calendar.month_name[startDateObj.month])
