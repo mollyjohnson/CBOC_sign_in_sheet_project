@@ -18,10 +18,13 @@ ws.title = "cboc_signin_sheet"
 ws.sheet_properties.tabColor = "1072BA"
 
 # TEST_START
-startDateStr = '2022-04-27'
 
-# Create date object in format yyyy-mm-dd
-startDateObj = datetime.strptime(startDateStr, "%Y-%m-%d")
+# get start date of the month from user
+startDateStr = input("Enter month's start date in the format mm-dd-yyyy: ")
+print('your start date string is: ', startDateStr)
+
+# Create date object in format mm-dd-yyyy
+startDateObj = datetime.strptime(startDateStr, "%m-%d-%Y")
 
 print(startDateObj)
 print('Type: ',type(startDateObj))
