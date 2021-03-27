@@ -129,9 +129,9 @@ dmypy.json
 .pyre/
 
 # repl.it stuff
-.replit
+*.replit
 poetry.lock
 pyproject.toml
 
 # excel files
-.xlsx
+*.xlsx
