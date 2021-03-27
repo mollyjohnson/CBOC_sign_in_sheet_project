@@ -32,6 +32,7 @@ print('Day of Week (number): ', startDateObj.weekday())
 print('Day of Week (name): ', calendar.day_abbr[startDateObj.weekday()])
 # to get name of month from date
 print('Month name: ', calendar.month_name[startDateObj.month])
+print()
 
 # save workbook to excel file
 wb.save('cboc_signin_sheet.xlsx')   
