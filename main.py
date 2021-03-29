@@ -48,6 +48,13 @@ print('Day of Week (name): ', calendar.day_abbr[startDateObj.weekday()])
 # to get name of month from date
 print('Month name: ', calendar.month_name[startDateObj.month])
 
+# create headers
+ws['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
+data = ws['A1'].value 
+ws.merge_cells('A1:AE1')
+ws['A1'] = data
+ws['A1'].alignment = Alignment(horizontal = 'center')
+
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
 exit()
