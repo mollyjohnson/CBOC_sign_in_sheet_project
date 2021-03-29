@@ -7,7 +7,9 @@
 # for the days of the month, weekends, and federal holidays
 
 # import openpyxl, datetime, and calendar
+import openpyxl
 from openpyxl import Workbook
+from openpyxl.styles import Alignment
 from datetime import datetime
 import calendar
 
@@ -35,8 +37,7 @@ startDateStr = input("\nEnter month's start date in the format mm-dd-yyyy: ")
 # Create date object in format mm-dd-yyyy
 startDateObj = datetime.strptime(startDateStr, "%m-%d-%Y")
 
-#print(startDateObj)
-#print('Type: ',type(startDateObj))
+#get day number from date
 print('Day of Month: ', startDateObj.day)
 #get year from date
 print('Year: ', startDateObj.year)
@@ -47,5 +48,6 @@ print('Day of Week (name): ', calendar.day_abbr[startDateObj.weekday()])
 # to get name of month from date
 print('Month name: ', calendar.month_name[startDateObj.month])
 
-# save workbook to excel file
+# save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
+exit()
