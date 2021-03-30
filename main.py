@@ -31,6 +31,7 @@ ol = "Oak Lawn"
 fz = "Frozen"
 t = "Tech"
 toa = "Time of Arrival"
+midDate = 15
 
 # get start date of the month from user
 startDateStr = input("\nEnter month's start date in the format mm-dd-yyyy: ")
@@ -76,6 +77,10 @@ ws['AE1'].border = Border(top = thick , left = None, right = thick, bottom = thi
 for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = 2, max_col = 30):
     for cell in row:
         cell.border = Border(top = thick, left = None, right = None, bottom = thick)
+
+# create day names and dates sub header rows
+ws['A2'].font = Font(name = 'Times New Roman', size = 10, bold = True)
+ws['A2'].border = Border(top = thick , left = thick, right = thick, bottom = thick)
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
