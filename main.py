@@ -32,6 +32,7 @@ fz = "Frozen"
 t = "Tech"
 toa = "Time of Arrival"
 midDate = 15
+cbocColWidth = 10.86
 
 # get start date of the month from user
 startDateStr = input("\nEnter month's start date in the format mm-dd-yyyy: ")
@@ -55,7 +56,7 @@ print('Month name: ', calendar.month_name[startDateObj.month])
 
 # cell border values
 thin = Side(border_style = "thin", color = "000000")
-double = Side(border_style = "double", color = "001C54")
+double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
 
 # create header and merge cells A1 through AE1
@@ -81,6 +82,7 @@ for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = 2, max_col = 30):
 # create day names and dates sub header rows
 ws['A2'].font = Font(name = 'Times New Roman', size = 10, bold = True)
 ws['A2'].border = Border(top = thick , left = thick, right = thick, bottom = thick)
+ws.column_dimensions['A'].width = cbocColWidth
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
