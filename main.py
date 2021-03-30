@@ -67,10 +67,8 @@ ws['A1'].font = headerFont
 # set border at far left and far right of merged cells
 ws['A1'].border = Border(top = thick , left = thick, right = None, bottom = thick)
 ws['AE1'].border = Border(top = thick , left = None, right = thick, bottom = thick) 
-
-for x in range(2, 30):
-    for y in range(1, 1):
-       ws[y].border = Border(top = thick, left = None, right = None, bottom = thick) 
+ws['B1'].border = Border(top = thick, left = None, right = None, bottom = thick) 
+ws['C1'].border = Border(top = thick, left = None, right = None, bottom = thick)  
     
 #.border = Border(top = thick, left = None, right = None, bottom = thick)
 
