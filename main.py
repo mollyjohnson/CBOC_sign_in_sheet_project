@@ -9,9 +9,9 @@
 # import openpyxl, datetime, and calendar
 import openpyxl
 from openpyxl import Workbook
-from openpyxl.styles import Alignment
 from datetime import datetime
 import calendar
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 
 # create workbook and sheet
 wb = Workbook()
@@ -53,7 +53,11 @@ ws['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " 
 data = ws['A1'].value 
 ws.merge_cells('A1:AE1')
 ws['A1'] = data
+
+# set alignment to center, font to Times New Roman and size to 28
 ws['A1'].alignment = Alignment(horizontal = 'center')
+headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
+ws['A1'].font = headerFont
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
