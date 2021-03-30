@@ -50,7 +50,8 @@ print('Month name: ', calendar.month_name[startDateObj.month])
 
 # cell border values
 thin = Side(border_style = "thin", color = "000000")
-double = Side(border_style = "double", color = "ff0000")
+double = Side(border_style = "double", color = "001C54")
+thick = Side(border_style = "thick", color = "001C54")
 
 # create header and merge cells A1 through AE1
 ws['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
@@ -62,7 +63,7 @@ ws['A1'] = data
 ws['A1'].alignment = Alignment(horizontal = 'center')
 headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
 ws['A1'].font = headerFont
-ws['A1'].border = Border(top = double, left = double, right = double, bottom = double)
+ws['A1'].border = Border(top = thick , left = thick, right = thick, bottom = thick)
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
