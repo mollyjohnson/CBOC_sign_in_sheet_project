@@ -63,10 +63,16 @@ ws['A1'] = data
 ws['A1'].alignment = Alignment(horizontal = 'center')
 headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
 ws['A1'].font = headerFont
+
+# set border at far left and far right of merged cells
 ws['A1'].border = Border(top = thick , left = thick, right = None, bottom = thick)
 ws['AE1'].border = Border(top = thick , left = None, right = thick, bottom = thick) 
 
-
+for x in range(2, 30):
+    for y in range(1, 1):
+       ws[y].border = Border(top = thick, left = None, right = None, bottom = thick) 
+    
+#.border = Border(top = thick, left = None, right = None, bottom = thick)
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
