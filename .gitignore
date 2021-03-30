@@ -134,4 +134,4 @@ poetry.lock
 pyproject.toml
 
 # excel files
-*.xlsx
+#*.xlsx
