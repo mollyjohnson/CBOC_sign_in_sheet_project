@@ -64,13 +64,14 @@ ws['A1'].alignment = Alignment(horizontal = 'center')
 headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
 ws['A1'].font = headerFont
 
-# set border at far left and far right of merged cells
+# set border at far left and far right of header merged cells
 ws['A1'].border = Border(top = thick , left = thick, right = None, bottom = thick)
 ws['AE1'].border = Border(top = thick , left = None, right = thick, bottom = thick) 
-ws['B1'].border = Border(top = thick, left = None, right = None, bottom = thick) 
-ws['C1'].border = Border(top = thick, left = None, right = None, bottom = thick)  
-    
-#.border = Border(top = thick, left = None, right = None, bottom = thick)
+
+# set border at middle header merged cells
+for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = 2, max_col = 30):
+    for cell in row:
+        cell.border = Border(top = thick, left = None, right = None, bottom = thick)
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
