@@ -63,9 +63,10 @@ ws['A1'] = data
 ws['A1'].alignment = Alignment(horizontal = 'center')
 headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
 ws['A1'].font = headerFont
-ws['A1'].border = Border(top = thick , left = thick, right = thick, bottom = thick)
-#ws['B1'].border = Border(top = thick , left = None, right = None, bottom = thick)
-ws['AE1'].border = Border(top = thick , left = thick, right = thick, bottom = thick) 
+ws['A1'].border = Border(top = thick , left = thick, right = None, bottom = thick)
+ws['AE1'].border = Border(top = thick , left = None, right = thick, bottom = thick) 
+
+
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
