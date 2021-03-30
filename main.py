@@ -48,6 +48,10 @@ print('Day of Week (name): ', calendar.day_abbr[startDateObj.weekday()])
 # to get name of month from date
 print('Month name: ', calendar.month_name[startDateObj.month])
 
+#to iterate to next date/day name
+#print('Next date (num) of week: ', (startDateObj.day + 1))
+#print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
+
 # cell border values
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "double", color = "001C54")
