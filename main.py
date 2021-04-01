@@ -38,7 +38,30 @@ CBOC_COL_WIDTH = 10.86
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
-    
+
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def getStartDate():
+    # get start date of the month from user
+    userInput = input("\nEnter month and year in the format mm/yy: ")
+
+    # reformat start date input into string for datetime 
+    i = 0
+    startDate = "" 
+    while(i < len(userInput)):
+        if(i >= 0 and i <= 1):
+            startDate += userInput[i]
+        elif(i == 2):
+            startDate += "-01-20"
+        elif(i >= 3):
+            startDate += userInput[i]
+        i += 1
+    return startDate
+
 ####################################################################
 ### Function Title: createHeader()
 ### Arguments:
@@ -46,6 +69,7 @@ thick = Side(border_style = "thick", color = "001C54")
 ### Description: 
 ####################################################################
 def createHeader(ws, startCell, endCell, startDateObj):
+    # create header border formatting
     headerBorderLeft = Border(top = thick , left = thick, right = None, bottom = thick) 
     headerBorderRight = Border(top = thick , left = None, right = thick, bottom = thick)  
     headerBorderMid = Border(top = thick, left = None, right = None, bottom = thick)
@@ -74,10 +98,10 @@ def createHeader(ws, startCell, endCell, startDateObj):
     ws.merge_cells('A1:AE1')
     ws['A1'] = data 
     
-def getDatetimeObj(startDateStr):
-    dateTimeObj = datetime.strptime(startDateStr, "%m-%d-%Y")
+def getDatetimeObj(startDate):
+    dateTimeObj = datetime.strptime(startDate, "%m-%d-%Y")
     #print start date string
-    print(startDateStr)
+    print(startDate)
     #get day number from date
     print('Day of Month: ', dateTimeObj.day)
     #get year from date
@@ -97,32 +121,19 @@ def getDatetimeObj(startDateStr):
 ### Description: 
 ####################################################################
 def main():
-    # create workbook and 1st sheet
+    # create workbook (1st sheet at pos 0 created automatically)
     wb = Workbook()
     ws1 = wb.active
     ws1.title = "1-15"
 
-    # create 2nd sheet
+    # create 2nd sheet at pos 1
     ws2 = wb.create_sheet("16-End", 1)
     
-    # get start date of the month from user
-    inputStr = input("\nEnter month and year in the format mm/yy: ")
+    # get start date string from user
+    startDate = getStartDate()
 
-    # reformat start date input into string for datetime 
-    i = 0
-    startDateStr = "" 
-    while(i < len(inputStr)):
-        if(i >= 0 and i <= 1):
-            startDateStr += inputStr[i]
-        elif(i == 2):
-            startDateStr += "-01-20"
-        elif(i >= 3):
-            startDateStr += inputStr[i]
-        i += 1
-    
-
-    # Create date object in format mm-dd-yyyy
-    startDateObj = getDatetimeObj(startDateStr)
+    # Create date object in format mm-dd-yyyy from start date string
+    startDateObj = getDatetimeObj(startDate)
     
     #to iterate to next date/day name
     #print('Next date (num) of week: ', (startDateObj.day + 1))
