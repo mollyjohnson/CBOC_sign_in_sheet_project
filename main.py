@@ -40,6 +40,24 @@ double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
 
 ####################################################################
+### Function Title: validUserInput()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def validUserInput(userInput):
+    j = 0
+    while(j < len(userInput)):
+        if(j != 2):
+            if(userInput[j].isdigit() == False):
+                return False
+        else:
+            if(userInput[j] != '-' and userInput[j] != '/'):
+                return False
+        j += 1
+    return True
+
+####################################################################
 ### Function Title: getStartDate()
 ### Arguments:
 ### Returns:
@@ -47,7 +65,13 @@ thick = Side(border_style = "thick", color = "001C54")
 ####################################################################
 def getStartDate():
     # get start date of the month from user
-    userInput = input("\nEnter month and year in the format mm/yy: ")
+    i = 0;
+    while(i == 0):
+        userInput = input("\nEnter month and year in the format mm/yy: ")
+        if(validUserInput(userInput) == True):
+            i = 1
+        else:
+            print("Your entry was invalid. Enter month and year in the format mm/yy or mm-yy:")
 
     # reformat start date input into string for datetime 
     i = 0
