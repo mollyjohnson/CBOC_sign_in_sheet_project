@@ -40,7 +40,7 @@ double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
 
 ####################################################################
-### Function Title:
+### Function Title: getStartDate()
 ### Arguments:
 ### Returns:
 ### Description: 
@@ -97,7 +97,13 @@ def createHeader(ws, startCell, endCell, startDateObj):
     data = ws['A1'].value 
     ws.merge_cells('A1:AE1')
     ws['A1'] = data 
-    
+
+####################################################################
+### Function Title: getDateTimeObj()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################   
 def getDatetimeObj(startDate):
     dateTimeObj = datetime.strptime(startDate, "%m-%d-%Y")
     #print start date string
