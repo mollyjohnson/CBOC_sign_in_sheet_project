@@ -40,7 +40,7 @@ double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
     
 ####################################################################
-### Function Title:
+### Function Title: createHeader()
 ### Arguments:
 ### Returns:
 ### Description: 
@@ -74,8 +74,10 @@ def createHeader(ws, startCell, endCell, startDateObj):
     ws.merge_cells('A1:AE1')
     ws['A1'] = data 
     
-def getDatetimeObj(startCellStr):
-    dateTimeObj = datetime.strptime(startCellStr, "%m-%d-%Y")
+def getDatetimeObj(startDateStr):
+    dateTimeObj = datetime.strptime(startDateStr, "%m-%d-%Y")
+    #print start date string
+    print(startDateStr)
     #get day number from date
     print('Day of Month: ', dateTimeObj.day)
     #get year from date
@@ -104,7 +106,21 @@ def main():
     ws2 = wb.create_sheet("16-End", 1)
     
     # get start date of the month from user
-    startDateStr = input("\nEnter month's start date in the format mm-dd-yyyy: ")
+    inputStr = input("\nEnter month and year in the format mm/yy: ")
+
+    # reformat start date input into string for datetime 
+    i = 0
+    startDateStr = "" 
+    while(i < len(inputStr)):
+        if(i >= 0 and i <= 1):
+            startDateStr += inputStr[i]
+        elif(i == 2):
+            startDateStr += "-01-20"
+        elif(i >= 3):
+            startDateStr += inputStr[i]
+        i += 1
+    
+
     # Create date object in format mm-dd-yyyy
     startDateObj = getDatetimeObj(startDateStr)
     
