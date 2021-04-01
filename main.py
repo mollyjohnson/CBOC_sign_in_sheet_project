@@ -68,7 +68,8 @@ def createHeader(ws, startCell, endCell, startDateObj):
             cell.border = headerBorderMid 
             
     # create header and merge cells A1 through AE1
-    ws['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
+    ws['A1'] = ("Month/Year: " + (str(calendar.month_name[startDateObj.month]) + " " + 
+        str(startDateObj.year)).upper())
     data = ws['A1'].value 
     ws.merge_cells('A1:AE1')
     ws['A1'] = data 
@@ -98,11 +99,9 @@ def main():
     wb = Workbook()
     ws1 = wb.active
     ws1.title = "1-15"
-    ws1.sheet_properties.tabColor = "1072BA"
 
     # create 2nd sheet
     ws2 = wb.create_sheet("16-End", 1)
-    ws2.sheet_properties.tabColor = "1072BA"
     
     # get start date of the month from user
     startDateStr = input("\nEnter month's start date in the format mm-dd-yyyy: ")
