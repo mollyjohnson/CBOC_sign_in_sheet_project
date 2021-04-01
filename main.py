@@ -34,6 +34,10 @@ TCH = "Tech"
 TOA = "Time of Arrival"
 MID_DATE = 15
 CBOC_COL_WIDTH = 10.86
+# cell border values
+thin = Side(border_style = "thin", color = "000000")
+double = Side(border_style = "double", color = "000000")
+thick = Side(border_style = "thick", color = "001C54")
     
 ####################################################################
 ### Function Title:
@@ -41,6 +45,33 @@ CBOC_COL_WIDTH = 10.86
 ### Returns:
 ### Description: 
 ####################################################################
+def createHeader(ws, startDate, endDate, startDateObj):
+    headerBorderLeft = Border(top = thick , left = thick, right = None, bottom = thick) 
+    headerBorderRight = Border(top = thick , left = None, right = thick, bottom = thick)  
+    headerBorderMid = Border(top = thick, left = None, right = None, bottom = thick)
+    
+    # font values
+    headerFont = Font(name = 'Times New Roman', size = 28, bold = True)    
+    
+    #set header alignment to center, font to Times New Roman and size to 28
+    ws['A1'].alignment = Alignment(horizontal = 'center')
+    ws['A1'].font = headerFont
+    
+    # set border at far left and far right of header merged cells
+    ws['A1'].border = headerBorderLeft
+    ws['AE1'].border = headerBorderRight
+    
+    # set border at middle header merged cells
+    for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = (startDate + 1), max_col = (endDate - 1)):
+        for cell in row:
+            cell.border = headerBorderMid 
+            
+    # create header and merge cells A1 through AE1
+    ws['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
+    data = ws['A1'].value 
+    ws.merge_cells('A1:AE1')
+    ws['A1'] = data 
+    
 def getDatetimeObj(startDateStr):
     dateTimeObj = datetime.strptime(startDateStr, "%m-%d-%Y")
     #get day number from date
@@ -81,42 +112,15 @@ def main():
     #print('Next date (num) of week: ', (startDateObj.day + 1))
     #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
     
-    # cell border values
-    thin = Side(border_style = "thin", color = "000000")
-    double = Side(border_style = "double", color = "000000")
-    thick = Side(border_style = "thick", color = "001C54")
     cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
-    headerBorderLeft = Border(top = thick , left = thick, right = None, bottom = thick) 
-    headerBorderRight = Border(top = thick , left = None, right = thick, bottom = thick)  
-    headerBorderMid = Border(top = thick, left = None, right = None, bottom = thick)
-    
-    # font values
-    headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
     cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
-    
-    # create day names and dates sub header rows1
     ws1['A2'].font = cbocNameFont
     ws1['A2'].border = cbocNameBorder
     ws1.column_dimensions['A'].width = CBOC_COL_WIDTH
     
-    # create header and merge cells A1 through AE1
-    ws1['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
-    data = ws1['A1'].value 
-    ws1.merge_cells('A1:AE1')
-    ws1['A1'] = data
-    
-    # set header alignment to center, font to Times New Roman and size to 28
-    ws1['A1'].alignment = Alignment(horizontal = 'center')
-    ws1['A1'].font = headerFont
-    
-    # set border at far left and far right of header merged cells
-    ws1['A1'].border = headerBorderLeft
-    ws1['AE1'].border = headerBorderRight
-    
-    # set border at middle header merged cells
-    for row in ws1.iter_rows(min_row = 1, max_row = 1, min_col = 2, max_col = 30):
-        for cell in row:
-            cell.border = headerBorderMid
+    # create header for both sheets
+    createHeader(ws1, startDateObj.day, MID_DATE, startDateObj)
+    createHeader(ws2, (MID_DATE + 1), 31, startDateObj)
     
     # save workbook to excel file and exit
     wb.save('cboc_signin_sheet.xlsx')   
