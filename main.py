@@ -6,8 +6,19 @@
 # checking in clinics for one month. Will adjust 
 # for the days of the month, weekends, and federal holidays
 
-# title: main()
-# description: 
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+
+####################################################################
+### Function Title: main()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
 def main():
     # import openpyxl, datetime, and calendar
     import openpyxl
@@ -16,10 +27,10 @@ def main():
     import calendar
     from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
     
-    # create workbook and sheet
+    # create workbook and 1st sheet
     wb = Workbook()
     ws = wb.active
-    ws.title = "cboc_signin_sheet"
+    ws.title = "1-15"
     ws.sheet_properties.tabColor = "1072BA"
     
     # create cboc/core names and other constants
