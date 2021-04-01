@@ -45,7 +45,7 @@ thick = Side(border_style = "thick", color = "001C54")
 ### Returns:
 ### Description: 
 ####################################################################
-def createHeader(ws, startDate, endDate, startDateObj):
+def createHeader(ws, startCell, endCell, startDateObj):
     headerBorderLeft = Border(top = thick , left = thick, right = None, bottom = thick) 
     headerBorderRight = Border(top = thick , left = None, right = thick, bottom = thick)  
     headerBorderMid = Border(top = thick, left = None, right = None, bottom = thick)
@@ -53,6 +53,7 @@ def createHeader(ws, startDate, endDate, startDateObj):
     # font values
     headerFont = Font(name = 'Times New Roman', size = 28, bold = True)    
     
+    ###################NEED TO USE NUMBERS NOT LETTERS FOR CELLS HERE
     #set header alignment to center, font to Times New Roman and size to 28
     ws['A1'].alignment = Alignment(horizontal = 'center')
     ws['A1'].font = headerFont
@@ -62,7 +63,7 @@ def createHeader(ws, startDate, endDate, startDateObj):
     ws['AE1'].border = headerBorderRight
     
     # set border at middle header merged cells
-    for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = (startDate + 1), max_col = (endDate - 1)):
+    for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = (startCell + 1), max_col = (endCell - 1)):
         for cell in row:
             cell.border = headerBorderMid 
             
@@ -72,8 +73,8 @@ def createHeader(ws, startDate, endDate, startDateObj):
     ws.merge_cells('A1:AE1')
     ws['A1'] = data 
     
-def getDatetimeObj(startDateStr):
-    dateTimeObj = datetime.strptime(startDateStr, "%m-%d-%Y")
+def getDatetimeObj(startCellStr):
+    dateTimeObj = datetime.strptime(startCellStr, "%m-%d-%Y")
     #get day number from date
     print('Day of Month: ', dateTimeObj.day)
     #get year from date
@@ -119,8 +120,9 @@ def main():
     ws1.column_dimensions['A'].width = CBOC_COL_WIDTH
     
     # create header for both sheets
-    createHeader(ws1, startDateObj.day, MID_DATE, startDateObj)
-    createHeader(ws2, (MID_DATE + 1), 31, startDateObj)
+    createHeader(ws1, 1, MID_DATE, startDateObj)
+    ######################need to get end date here
+    createHeader(ws2, 1, (31 - MID_DATE), startDateObj)
     
     # save workbook to excel file and exit
     wb.save('cboc_signin_sheet.xlsx')   
