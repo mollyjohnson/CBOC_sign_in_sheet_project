@@ -29,9 +29,13 @@ def main():
     
     # create workbook and 1st sheet
     wb = Workbook()
-    ws = wb.active
-    ws.title = "1-15"
-    ws.sheet_properties.tabColor = "1072BA"
+    ws1 = wb.active
+    ws1.title = "1-15"
+    ws1.sheet_properties.tabColor = "1072BA"
+
+    # create 2nd sheet
+    ws2 = wb.create_sheet("16-End", 1)
+    ws2.sheet_properties.tabColor = "1072BA"
     
     # create cboc/core names and other constants
     jb = "Jesse Brown"
@@ -81,27 +85,27 @@ def main():
     headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
     cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
     
-    # create day names and dates sub header rows
-    ws['A2'].font = cbocNameFont
-    ws['A2'].border = cbocNameBorder
-    ws.column_dimensions['A'].width = cbocColWidth
+    # create day names and dates sub header rows1
+    ws1['A2'].font = cbocNameFont
+    ws1['A2'].border = cbocNameBorder
+    ws1.column_dimensions['A'].width = cbocColWidth
     
     # create header and merge cells A1 through AE1
-    ws['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
-    data = ws['A1'].value 
-    ws.merge_cells('A1:AE1')
-    ws['A1'] = data
+    ws1['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
+    data = ws1['A1'].value 
+    ws1.merge_cells('A1:AE1')
+    ws1['A1'] = data
     
     # set header alignment to center, font to Times New Roman and size to 28
-    ws['A1'].alignment = Alignment(horizontal = 'center')
-    ws['A1'].font = headerFont
+    ws1['A1'].alignment = Alignment(horizontal = 'center')
+    ws1['A1'].font = headerFont
     
     # set border at far left and far right of header merged cells
-    ws['A1'].border = headerBorderLeft
-    ws['AE1'].border = headerBorderRight
+    ws1['A1'].border = headerBorderLeft
+    ws1['AE1'].border = headerBorderRight
     
     # set border at middle header merged cells
-    for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = 2, max_col = 30):
+    for row in ws1.iter_rows(min_row = 1, max_row = 1, min_col = 2, max_col = 30):
         for cell in row:
             cell.border = headerBorderMid
     
