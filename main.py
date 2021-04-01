@@ -58,6 +58,19 @@ print('Month name: ', calendar.month_name[startDateObj.month])
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
+cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
+headerBorderLeft = Border(top = thick , left = thick, right = None, bottom = thick) 
+headerBorderRight = Border(top = thick , left = None, right = thick, bottom = thick)  
+headerBorderMid = Border(top = thick, left = None, right = None, bottom = thick)
+
+# font values
+headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
+cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
+
+# create day names and dates sub header rows
+ws['A2'].font = cbocNameFont
+ws['A2'].border = cbocNameBorder
+ws.column_dimensions['A'].width = cbocColWidth
 
 # create header and merge cells A1 through AE1
 ws['A1'] = ("Month/Year: " + str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year))
@@ -67,22 +80,16 @@ ws['A1'] = data
 
 # set header alignment to center, font to Times New Roman and size to 28
 ws['A1'].alignment = Alignment(horizontal = 'center')
-headerFont = Font(name = 'Times New Roman', size = 28, bold = True)
 ws['A1'].font = headerFont
 
 # set border at far left and far right of header merged cells
-ws['A1'].border = Border(top = thick , left = thick, right = None, bottom = thick)
-ws['AE1'].border = Border(top = thick , left = None, right = thick, bottom = thick) 
+ws['A1'].border = headerBorderLeft
+ws['AE1'].border = headerBorderRight
 
 # set border at middle header merged cells
 for row in ws.iter_rows(min_row = 1, max_row = 1, min_col = 2, max_col = 30):
     for cell in row:
-        cell.border = Border(top = thick, left = None, right = None, bottom = thick)
-
-# create day names and dates sub header rows
-ws['A2'].font = Font(name = 'Times New Roman', size = 10, bold = True)
-ws['A2'].border = Border(top = thick , left = thick, right = thick, bottom = thick)
-ws.column_dimensions['A'].width = cbocColWidth
+        cell.border = headerBorderMid
 
 # save workbook to excel file and exit
 wb.save('cboc_signin_sheet.xlsx')   
