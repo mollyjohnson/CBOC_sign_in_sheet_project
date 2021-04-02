@@ -46,6 +46,12 @@ thick = Side(border_style = "thick", color = "001C54")
 ### Description: 
 ####################################################################
 def validUserInput(userInput):
+    # check that length of user input string is correct
+    if(len(userInput) > 5):
+        return False;
+    
+    # check that first two chars are digits, mid char
+    # is / or -, and last 2 chars are digits.
     j = 0
     while(j < len(userInput)):
         if(j != 2):
@@ -55,6 +61,22 @@ def validUserInput(userInput):
             if(userInput[j] != '-' and userInput[j] != '/'):
                 return False
         j += 1
+    
+    # if the month and year chars were digits, make sure they make sense
+    monthInput = ""
+    yearInput = ""
+    monthInput += userInput[0]
+    monthInput += userInput[1]
+    yearInput += userInput[3]
+    yearInput += userInput[4]
+
+    if(int(monthInput) < 1 or int(monthInput) > 12):
+        return False
+    # check that year is between 2021 and 2099
+    if (int(yearInput) < 21 or int(yearInput) > 99):
+        return False
+    
+    # otherwise met all requirements, return true
     return True
 
 ####################################################################
