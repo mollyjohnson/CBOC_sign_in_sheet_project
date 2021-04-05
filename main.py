@@ -47,8 +47,8 @@ thick = Side(border_style = "thick", color = "001C54")
 ####################################################################
 def validUserInput(userInput):
     # check that length of user input string is correct
-    if(len(userInput) > 5):
-        return False;
+    if(len(userInput) != 5):
+        return False
     
     # check that first two chars are digits, mid char
     # is / or -, and last 2 chars are digits.
