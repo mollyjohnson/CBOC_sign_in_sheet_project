@@ -198,8 +198,14 @@ def main():
     
     cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
     cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
-    ws1['A2'].font = cbocNameFont
-    ws1['A2'].border = cbocNameBorder
+
+    # create cboc cell font/border/value
+
+    ws1.cell(row=2, column=1).font = cbocNameFont
+    ws1.cell(row=2, column=1).border = cbocNameBorder
+    ws1.cell(row=2, column=1).value = 'test'
+    #ws1['A2'].font = cbocNameFont
+    #ws1['A2'].border = cbocNameBorder
     ws1.column_dimensions['A'].width = CBOC_COL_WIDTH
     
     # create header for both sheets
