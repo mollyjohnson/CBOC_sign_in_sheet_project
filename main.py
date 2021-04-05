@@ -88,7 +88,7 @@ def validUserInput(userInput):
 ####################################################################
 def getStartDate():
     # get start date of the month from user
-    i = 0;
+    i = 0
     while(i == 0):
         userInput = input("\nEnter month and year in the format mm/yy: ")
         if(validUserInput(userInput) == True):
