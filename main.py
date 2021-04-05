@@ -34,7 +34,13 @@ TCH = "Tech"
 TOA = "Time of Arrival"
 MID_DATE = 15
 CBOC_COL_WIDTH = 10.86
-# cell border values
+HEADER_ROW_HEIGHT = 45
+CBOC_ROW_HEIGHT = 20
+TECH_TOA_HEIGHT = 27
+CBOC_NAME_AND_FROZEN_HEIGHT = 21
+SPACER_HEIGHT = 10
+
+# set cell border values
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
@@ -195,6 +201,9 @@ def main():
     #to iterate to next date/day name
     #print('Next date (num) of week: ', (startDateObj.day + 1))
     #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
+
+    # set row sizes for all rows
+    # setRowHeights()
     
     cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
     cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
