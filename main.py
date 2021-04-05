@@ -70,6 +70,7 @@ def validUserInput(userInput):
     yearInput += userInput[3]
     yearInput += userInput[4]
 
+    # check that month is between 1 and 12
     if(int(monthInput) < 1 or int(monthInput) > 12):
         return False
     # check that year is between 2021 and 2099
