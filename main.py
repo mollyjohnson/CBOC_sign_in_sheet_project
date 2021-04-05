@@ -96,7 +96,7 @@ def getStartDate():
         else:
             print("Your entry was invalid. Enter month and year in the format mm/yy or mm-yy:")
 
-    # reformat start date input into string for datetime 
+    # reformat start date input into string for datetime in format mm-01-20yy
     i = 0
     startDate = "" 
     while(i < len(userInput)):
