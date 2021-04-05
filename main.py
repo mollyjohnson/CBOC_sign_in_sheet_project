@@ -188,6 +188,10 @@ def main():
     # Create date object in format mm-dd-yyyy from start date string
     startDateObj = getDatetimeObj(startDate)
     
+    # get end date for the month
+    endDate = calendar.monthrange(startDateObj.year, startDateObj.month)[1]
+    print("End of month date: " + str(endDate))
+
     #to iterate to next date/day name
     #print('Next date (num) of week: ', (startDateObj.day + 1))
     #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
@@ -200,8 +204,7 @@ def main():
     
     # create header for both sheets
     createHeader(ws1, 1, MID_DATE, startDateObj)
-    ######################need to get end date here
-    createHeader(ws2, 1, (31 - MID_DATE), startDateObj)
+    createHeader(ws2, 1, (endDate - MID_DATE), startDateObj)
     
     # save workbook to excel file and exit
     wb.save('cboc_signin_sheet.xlsx')   
