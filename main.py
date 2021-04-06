@@ -36,9 +36,10 @@ MID_DATE = 15
 CBOC_COL_WIDTH = 10.86
 HEADER_ROW_HEIGHT = 45
 CBOC_ROW_HEIGHT = 20
-TECH_TOA_HEIGHT = 27
-CBOC_NAME_AND_FROZEN_HEIGHT = 21
-SPACER_HEIGHT = 10
+DATE_ROW_HEIGHT = 22
+TECH_TOA_ROW_HEIGHT = 27
+CBOC_NAME_AND_FROZEN_ROW_HEIGHT = 21
+SPACER_ROW_HEIGHT = 10
 NUM_ROWS = 27
 HEADER_ROW = 1
 CBOC_ROW = 2
@@ -61,7 +62,15 @@ thick = Side(border_style = "thick", color = "001C54")
 ####################################################################
 def setRowHeights(ws):
     ws.row_dimensions[HEADER_ROW].height = HEADER_ROW_HEIGHT
+    ws.row_dimensions[CBOC_ROW].height = CBOC_ROW_HEIGHT 
+    ws.row_dimensions[DATE_ROW].height = DATE_ROW_HEIGHT
+    ws.row_dimensions[TECH_TOA_ROW].height = TECH_TOA_ROW_HEIGHT
     
+    for rowNum in CBOC_NAME_AND_FROZEN_ROWS:
+        ws.row_dimensions[rowNum].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT
+
+    for rowNum in SPACER_ROWS:
+        ws.row_dimensions[rowNum].height = SPACER_ROW_HEIGHT
 
 ####################################################################
 ### Function Title: validUserInput()
