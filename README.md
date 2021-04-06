@@ -5,4 +5,4 @@ program to update monthly calendar for keeping track of CBOC sign ins w/ correct
 alias g='git status'
 alias ga='git add .'
 alias gc='git commit .'
-alias gp='git pull'
+alias gp='git push'
