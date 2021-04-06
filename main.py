@@ -39,11 +39,29 @@ CBOC_ROW_HEIGHT = 20
 TECH_TOA_HEIGHT = 27
 CBOC_NAME_AND_FROZEN_HEIGHT = 21
 SPACER_HEIGHT = 10
+NUM_ROWS = 27
+HEADER_ROW = 1
+CBOC_ROW = 2
+DATE_ROW = 3
+TECH_TOA_ROW = 4
+CBOC_NAME_AND_FROZEN_ROW_START = 5
+CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
+SPACER_ROWS = [7,10,13,16,19,22,15]
 
 # set cell border values
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
+
+####################################################################
+### Function Title: setRowHeights()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def setRowHeights(ws):
+    ws.row_dimensions[HEADER_ROW].width = HEADER_ROW_HEIGHT
+    
 
 ####################################################################
 ### Function Title: validUserInput()
@@ -202,8 +220,9 @@ def main():
     #print('Next date (num) of week: ', (startDateObj.day + 1))
     #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
 
-    # set row sizes for all rows
-    # setRowHeights()
+    # set row height for all rows
+    setRowHeights(ws1)
+    setRowHeights(ws2)
     
     cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
     cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
