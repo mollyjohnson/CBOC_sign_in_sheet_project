@@ -252,8 +252,8 @@ def main():
     
     # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header for both sheets
-    createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, MID_DATE, startDateObj)
-    createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (endDate - MID_DATE), startDateObj)
+    createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, startDateObj)
+    createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, startDateObj)
     print("end date minus mid date is: " + str(endDate) + " - " + str(MID_DATE) + " = " + str((endDate - MID_DATE)))
     
     # save workbook to excel file and exit
