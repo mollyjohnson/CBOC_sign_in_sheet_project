@@ -151,6 +151,7 @@ def createHeader(ws, startCell, endCell, startDateObj):
     ###################NEED TO USE NUMBERS NOT LETTERS FOR CELLS HERE
     #set header alignment to center, font to Times New Roman and size to 28
     ws['A1'].alignment = Alignment(horizontal = 'center')
+    ws['A1'].alignment = Alignment(vertical = 'center')
     ws['A1'].font = headerFont
     
     # set border at far left and far right of header merged cells
