@@ -60,7 +60,7 @@ thick = Side(border_style = "thick", color = "001C54")
 ### Description: 
 ####################################################################
 def setRowHeights(ws):
-    ws.row_dimensions[HEADER_ROW].width = HEADER_ROW_HEIGHT
+    ws.row_dimensions[HEADER_ROW].height = HEADER_ROW_HEIGHT
     
 
 ####################################################################
