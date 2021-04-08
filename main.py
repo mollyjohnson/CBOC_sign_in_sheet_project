@@ -62,7 +62,7 @@ bigSpaceBorder = Border(left = thick, right = thick)
 spacerBorder = Border(left = thick, right = thick)
 cbocNameOnlyBorder = Border(top = double, left = thick, right = thick, bottom = thin)
 frozenOnlyBorder = Border(left = thick, right = thick, bottom = double)
-bottomRowBorder = Border(left = thick, right = thick, bottom = thick)
+bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 
 ####################################################################
 ### Function Title: createCBOCCOL()
@@ -102,7 +102,7 @@ def createCBOCCol(ws):
         ws.cell(row = i, column = CBOC_COL).border = frozenOnlyBorder
         ws.cell(row = i, column = CBOC_COL).value = FZ
         if(i == 27):
-            ws.cell(row = i, column = CBOC_COL).border = bottomRowBorder
+            ws.cell(row = i, column = CBOC_COL).border = bottomRowBorderCBOCName
         i += 3
 
     # put in spacer rows
