@@ -33,7 +33,7 @@ FZ = "Frozen"
 TCH = "Tech"
 TOA = "Time of Arrival"
 MID_DATE = 15
-CBOC_COL_WIDTH = 10.86
+CBOC_COL_WIDTH = 11.5
 HEADER_ROW_HEIGHT = 45
 CBOC_ROW_HEIGHT = 20
 DATE_ROW_HEIGHT = 22
@@ -42,43 +42,74 @@ CBOC_NAME_AND_FROZEN_ROW_HEIGHT = 21
 SPACER_ROW_HEIGHT = 10
 NUM_ROWS = 27
 HEADER_ROW = 1
-HEADER_AND_LABELS_COL = 11
+HEADER_AND_LABELS_COL = 1
 CBOC_COL = 1
 CBOC_ROW = 2
 DATE_ROW = 3
 TECH_TOA_ROW = 4
 CBOC_NAME_AND_FROZEN_ROW_START = 5
 CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
-SPACER_ROWS = [7,10,13,16,19,22,15]
-
+SPACER_ROWS = [7,10,13,16,19,22,25]
+NAMES = [OL, HE, AU, KA, LA, JO, JB, CP] 
 # set cell border values
 thin = Side(border_style = "thin", color = "000000")
-double = Side(border_style = "double", color = "000000")
+double = Side(border_style = "medium", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
+cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
+cbocNameFont = Font(name = 'Times New Roman', size = 9, bold = True)
+dateBorder = Border(left = thick, right = thick, bottom = thick)
+bigSpaceBorder = Border(left = thick, right = thick)
+spacerBorder = Border(left = thick, right = thick)
+cbocNameOnlyBorder = Border(top = double, left = thick, right = thick, bottom = thin)
+frozenOnlyBorder = Border(left = thick, right = thick, bottom = double)
+bottomRowBorder = Border(left = thick, right = thick, bottom = thick)
 
 ####################################################################
-### Function Title:
+### Function Title: createCBOCCOL()
 ### Arguments:
 ### Returns:
 ### Description: 
 ###################################################################
 def createCBOCCol(ws):
     # create cboc col border and font
-    cbocColNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
-    cbocColNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
     
     # set cboc col width
-    #ws.column_dimensions(row=CBOC_ROW, column=CBOC_COL).col_width = CBOC_COL_WIDTH
+    ws.column_dimensions['A'].width = CBOC_COL_WIDTH
     
-    i = CBOC_ROW            
-    while (i <= NUM_ROWS):
-        # set cboc col border and font
-        ws.cell(row=i, column=CBOC_COL).font = cbocColNameFont
-        ws.cell(row=i, column=CBOC_COL).border = cbocColNameBorder
-        i += 1
-    
-    # add values to the appropriate cboc col cells
-    
+    # set cboc and date border and font
+    ws.cell(row=2, column=CBOC_COL).font = cbocNameFont
+    ws.cell(row=2, column=CBOC_COL).border = cbocNameBorder
+    ws.cell(row=2, column=CBOC_COL).value = "CBOC/CORE"
+    ws.cell(row=3, column=CBOC_COL).border = dateBorder
+    ws.cell(row=3, column=CBOC_COL).font = cbocNameFont
+    ws.cell(row=3, column=CBOC_COL).value = "Date"
+    ws.cell(row=4, column=CBOC_COL).border = bigSpaceBorder
+
+    # put in border/font for cboc name only rows
+    i = 5
+    j = 0
+    while (i <= 26):
+        ws.cell(row = i, column = CBOC_COL).font = cbocNameFont
+        ws.cell(row = i, column = CBOC_COL).border = cbocNameOnlyBorder
+        ws.cell(row = i, column = CBOC_COL).value = NAMES[j]
+        i += 3
+        j += 1
+
+    # put in frozen rows
+    i = 6
+    while (i <= 27):
+        ws.cell(row = i, column = CBOC_COL).font = cbocNameFont
+        ws.cell(row = i, column = CBOC_COL).border = frozenOnlyBorder
+        ws.cell(row = i, column = CBOC_COL).value = FZ
+        if(i == 27):
+            ws.cell(row = i, column = CBOC_COL).border = bottomRowBorder
+        i += 3
+
+    # put in spacer rows
+    i = 7
+    while (i <= 25):
+        ws.cell(row = i, column = CBOC_COL).border = spacerBorder
+        i += 3
     
 ####################################################################
 ### Function Title: setRowHeights()
