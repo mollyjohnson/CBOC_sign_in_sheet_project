@@ -42,7 +42,8 @@ CBOC_NAME_AND_FROZEN_ROW_HEIGHT = 21
 SPACER_ROW_HEIGHT = 10
 NUM_ROWS = 27
 HEADER_ROW = 1
-HEADER_AND_LABELS_COL = 1
+HEADER_AND_LABELS_COL = 11
+CBOC_COL = 1
 CBOC_ROW = 2
 DATE_ROW = 3
 TECH_TOA_ROW = 4
@@ -55,6 +56,30 @@ thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "double", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
 
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+def createCBOCCol(ws):
+    # create cboc col border and font
+    cbocColNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
+    cbocColNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
+    
+    # set cboc col width
+    #ws.column_dimensions(row=CBOC_ROW, column=CBOC_COL).col_width = CBOC_COL_WIDTH
+    
+    i = CBOC_ROW            
+    while (i <= NUM_ROWS):
+        # set cboc col border and font
+        ws.cell(row=i, column=CBOC_COL).font = cbocColNameFont
+        ws.cell(row=i, column=CBOC_COL).border = cbocColNameBorder
+        i += 1
+    
+    # add values to the appropriate cboc col cells
+    
+    
 ####################################################################
 ### Function Title: setRowHeights()
 ### Arguments:
@@ -241,14 +266,11 @@ def main():
     setRowHeights(ws1)
     setRowHeights(ws2)
     
-    #cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
-    #cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
 
-    # create cboc cell font/border/value
-
-    #ws1.cell(row=2, column=1).font = cbocNameFont
-    #ws1.cell(row=2, column=1).border = cbocNameBorder
-    ws1.column_dimensions['A'].width = CBOC_COL_WIDTH
+    # create cboc cell font/border/values for both sheets
+    createCBOCCol(ws1)
+    createCBOCCol(ws2)
+    
     
     # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header for both sheets
