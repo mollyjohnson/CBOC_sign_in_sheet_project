@@ -19,6 +19,7 @@ from openpyxl import Workbook
 from datetime import datetime
 import calendar
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
+from openpyxl.utils import get_column_letter
 
 # create constants
 JB = "Jesse Brown"
@@ -70,11 +71,20 @@ bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 ### Returns:
 ### Description: 
 ###################################################################
+#def createDateCols(ws, dateTimeObj):
+
+
+####################################################################
+### Function Title: createCBOCCOL()
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
 def createCBOCCol(ws):
     # create cboc col border and font
     
     # set cboc col width
-    ws.column_dimensions['A'].width = CBOC_COL_WIDTH
+    ws.column_dimensions[get_column_letter(CBOC_COL)].width = CBOC_COL_WIDTH
     
     # set cboc and date border and font
     ws.cell(row=2, column=CBOC_COL).font = cbocNameFont
@@ -302,6 +312,9 @@ def main():
     createCBOCCol(ws1)
     createCBOCCol(ws2)
     
+    # create rest of cols (date cols) for both sheets
+    #createDateCols(ws1)
+    #createDateCols(ws2)
     
     # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header for both sheets
