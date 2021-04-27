@@ -66,13 +66,17 @@ frozenOnlyBorder = Border(left = thick, right = thick, bottom = double)
 bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 
 ####################################################################
-### Function Title: createCBOCCOL()
+### Function Title: createDateCols()
 ### Arguments:
 ### Returns:
 ### Description: 
 ###################################################################
-def createDateCols(ws, endDate, dateTimeObj):
-    print("end date for ws is: " + str(endDate))
+def createDateCols(ws, endCol, dateTimeObj):
+    # make start col 2 since dates start after CBOC col
+    k = 2
+    while (k <= endCol):
+
+        k += 1
 
 ####################################################################
 ### Function Title: createCBOCCOL()
@@ -314,7 +318,7 @@ def main():
     
     # create rest of cols (date cols) for both sheets
     createDateCols(ws1, MID_DATE, startDateObj)
-    createDateCols(ws2, endDate, startDateObj)
+    createDateCols(ws2, endDate - MID_DATE, startDateObj)
     
     # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header for both sheets
