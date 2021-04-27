@@ -71,8 +71,8 @@ bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 ### Returns:
 ### Description: 
 ###################################################################
-#def createDateCols(ws, dateTimeObj):
-
+def createDateCols(ws, endDate, dateTimeObj):
+    print("end date for ws is: " + str(endDate))
 
 ####################################################################
 ### Function Title: createCBOCCOL()
@@ -313,8 +313,8 @@ def main():
     createCBOCCol(ws2)
     
     # create rest of cols (date cols) for both sheets
-    #createDateCols(ws1)
-    #createDateCols(ws2)
+    createDateCols(ws1, MID_DATE, startDateObj)
+    createDateCols(ws2, endDate, startDateObj)
     
     # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header for both sheets
