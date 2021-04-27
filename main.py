@@ -72,11 +72,17 @@ bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 ### Description: 
 ###################################################################
 def createDateCols(ws, endCol, dateTimeObj):
-    # make start col 2 since dates start after CBOC col
-    k = 2
-    while (k <= endCol):
+    # make start col and row 2 since dates start after CBOC col and header row
+    curRow = 2
+    curCol = 2
+    #regColWidth = 3.67
+    regColWidth = 4.5 
+    while (curCol <= (endCol * 2)):
+        ws.column_dimensions[get_column_letter(curCol)].width = regColWidth 
+        curCol += 1
+        ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
 
-        k += 1
+        curCol += 1
 
 ####################################################################
 ### Function Title: createCBOCCOL()
