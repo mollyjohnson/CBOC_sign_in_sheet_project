@@ -79,7 +79,7 @@ def setDateInfo(ws, curCol, dateTimeObj):
     dayName = calendar.day_abbr[dateTimeObj.weekday()]
     dayName = dayName.upper()
     print('Day of Week (name): ', dayName)
-    
+
 ####################################################################
 ### Function Title: createDateCols()
 ### Arguments:
@@ -103,6 +103,8 @@ def createDateCols(ws, endCol, dateTimeObj):
         
         # increment to get to first column of new date
         curCol += 1
+
+        # increment the day and date
 
 ####################################################################
 ### Function Title: createCBOCCOL()
