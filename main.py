@@ -69,6 +69,8 @@ techFont = Font(name = 'Calibri', size = 9)
 toaFont = Font(name = 'Calibri', size = 5)
 dateBorderLeft = Border(top = thick, left = thick, bottom = thick)
 dateBorderRight = Border(top = thick, right = thick, bottom = thick)
+techInfoBorderLeft = Border(left = thick, right = thin, bottom = double)
+techInfoBorderRight = Border(right = thick, bottom = double)
 
 ####################################################################
 ### Function Title: mergeDate()
@@ -91,9 +93,12 @@ def mergeDateInfo(ws, startRow, startCol):
 def setTechInfo(ws, curCol, curRow):
     ws.cell(row = curRow + 2, column = curCol).value = TCH
     ws.cell(row = curRow + 2, column = curCol).font = techFont
+    ws.cell(row = curRow + 2, column = curCol).border = techInfoBorderLeft
+    
 
     ws.cell(row = curRow + 2, column = curCol + 1).value = TOA
     ws.cell(row = curRow + 2, column = curCol + 1).font = toaFont
+    ws.cell(row = curRow + 2, column = curCol + 1).border = techInfoBorderRight
     ws.cell(row = curRow + 2, column = curCol + 1).alignment = Alignment(wrap_text=True)
 
 ####################################################################
