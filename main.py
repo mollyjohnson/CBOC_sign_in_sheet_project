@@ -71,14 +71,10 @@ bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 ### Returns:
 ### Description: 
 ####################################################################
-def setDateInfo(ws, curCol, dateTimeObj):
-    #to get name of day (in number) from date
-    dayDate = dateTimeObj.weekday()
+def setDateInfo(ws, curCol, dayDate, dayName, dateNum):
     print('Day of Week (number): ', dayDate)
-    # to get name of day from date
-    dayName = calendar.day_abbr[dateTimeObj.weekday()]
-    dayName = dayName.upper()
     print('Day of Week (name): ', dayName)
+    print('Date of Month: ', dateNum)
 
 ####################################################################
 ### Function Title: createDateCols()
@@ -86,7 +82,14 @@ def setDateInfo(ws, curCol, dateTimeObj):
 ### Returns:
 ### Description: 
 ###################################################################
-def createDateCols(ws, endCol, dateTimeObj):
+def createDateCols(ws, endCol, dateTimeObj, startDate):
+    #to get name of day (in number) from date
+    dayDate = dateTimeObj.weekday()
+    # to get name of day from date
+    dayName = calendar.day_abbr[dateTimeObj.weekday()]
+    dayName = dayName.upper()
+    dateNum = startDate
+
     # make start col and row 2 since dates start after CBOC col and header row
     curRow = 2
     curCol = 2
@@ -95,7 +98,8 @@ def createDateCols(ws, endCol, dateTimeObj):
     while (curCol <= (endCol * 2)):
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth 
         
-        setDateInfo(ws, curCol, dateTimeObj)
+        # set the day date and name for the date/name cells
+        setDateInfo(ws, curCol, dayDate, dayName, dateNum)
         
         # increment to get to second part of each date column
         curCol += 1
@@ -105,6 +109,14 @@ def createDateCols(ws, endCol, dateTimeObj):
         curCol += 1
 
         # increment the day and date
+        dayDate += 1
+        dateNum += 1
+        #if day number is > 6, i.e. you've reached end of week, start week days over
+        if (dayDate > 6):
+            dayDate = 0
+        dayName = calendar.day_abbr[dayDate]
+        dayName = dayName.upper()
+        
 
 ####################################################################
 ### Function Title: createCBOCCOL()
@@ -299,9 +311,9 @@ def getDatetimeObj(startDate):
     #get year from date
     print('Year: ', dateTimeObj.year)
     #to get name of day (in number) from date
-    print('Day of Week (number): ', dateTimeObj.weekday())
+    print('Datetime day of Week (number): ', dateTimeObj.weekday())
     # to get name of day from date
-    print('Day of Week (name): ', calendar.day_abbr[dateTimeObj.weekday()])
+    print('Datetime day of Week (name): ', calendar.day_abbr[dateTimeObj.weekday()])
     # to get name of month from date
     print('Month name: ', calendar.month_name[dateTimeObj.month])
     return dateTimeObj
@@ -345,8 +357,8 @@ def main():
     createCBOCCol(ws2)
     
     # create rest of cols (date cols) for both sheets
-    createDateCols(ws1, MID_DATE, startDateObj)
-    createDateCols(ws2, endDate - MID_DATE, startDateObj)
+    createDateCols(ws1, MID_DATE, startDateObj, 1)
+    createDateCols(ws2, endDate - MID_DATE, startDateObj, 16)
     
     # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header for both sheets
