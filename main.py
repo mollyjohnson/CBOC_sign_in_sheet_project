@@ -69,6 +69,18 @@ techFont = Font(name = 'Calibri', size = 9)
 toaFont = Font(name = 'Calibri', size = 5)
 
 ####################################################################
+### Function Title: mergeDate()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def mergeDateInfo(ws, startRow, startCol):
+    data = ws.cell(row = startRow, column = startCol).value
+    ws.merge_cells(start_row = startRow, start_column = startCol, end_row = startRow, end_column = startCol + 1)
+    ws.cell(row = startRow, column = startCol).value = data
+
+
+####################################################################
 ### Function Title: setTechInfo()
 ### Arguments:
 ### Returns:
@@ -95,12 +107,14 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
 
     # set date name
     ws.cell(row = curRow, column = curCol).value = dayName
+    mergeDateInfo(ws, curRow, curCol)
     ws.cell(row = curRow, column = curCol).font = dateFont
     ws.cell(row = curRow, column = curCol).alignment = Alignment(horizontal='center')
 
 
     # set date num
     ws.cell(row = curRow + 1, column = curCol).value = dateNum
+    mergeDateInfo(ws, curRow + 1, curCol)
     ws.cell(row = curRow + 1, column = curCol).font = dateFont
     ws.cell(row = curRow + 1, column = curCol).alignment = Alignment(horizontal='center')
 
