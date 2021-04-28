@@ -51,8 +51,8 @@ TECH_TOA_ROW = 4
 CBOC_NAME_AND_FROZEN_ROW_START = 5
 CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
 SPACER_ROWS = [7,10,13,16,19,22,25]
-NAMES = [OL, HE, AU, KA, LA, JO, JB, CP] 
-# set cell border values
+NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
+# set constant cell border values
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "medium", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
@@ -71,6 +71,62 @@ dateBorderLeft = Border(top = thick, left = thick, bottom = thick)
 dateBorderRight = Border(top = thick, right = thick, bottom = thick)
 techInfoBorderLeft = Border(left = thick, right = thin, bottom = double)
 techInfoBorderRight = Border(right = thick, bottom = double)
+sigBorderTopLeft = Border(top = double, left = thick, right = thin, bottom = thin)
+sigBorderBottomLeft = Border(left = thick, right = thin, bottom = double)
+sigBorderTopRight = Border(top = double, right = thick, bottom = thin)
+sigBorderBottomRight = Border(right = thick, left = thin, bottom = double)
+spacerBorderLeft = Border(right = thin, left = thick)
+spacerBorderRight = Border(right = thick, left = thin)
+
+####################################################################
+### Function Title: createSigBorders()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def createSigBorders(ws, endCol):
+    startCol = 2
+    startRow = 5
+    endRow = NUM_ROWS
+    curCol = startCol
+    endCbocNameRow = 26
+    endSpacerRow = 25
+
+    while (curCol <= endCol):
+        # set cboc name row borders for both cols
+        curRow = startRow
+        while (curRow <= endCbocNameRow):
+            # set left col border
+            ws.cell(row = curRow, column = curCol).border = sigBorderTopLeft
+            # set right col border
+            ws.cell(row = curRow, column = curCol + 1).border = sigBorderTopRight
+            curRow += 3
+
+        # set frozen name row borders for both cols
+        curRow = 6
+        while (curRow <= endRow):
+            # set left col border
+            ws.cell(row = curRow, column = curCol).border = sigBorderBottomLeft
+            # set right col border
+            ws.cell(row = curRow, column = curCol + 1).border = sigBorderBottomRight
+            if(curRow == endRow):
+                # set left col border bottom to thick if last row
+                ws.cell(row = curRow, column = curCol).border = Border(right = thin, bottom = thick)
+                # set right col border bottom to thick if last row
+                ws.cell(row = curRow, column = curCol + 1).border = Border(right = thick, bottom = thick)
+            curRow += 3
+
+        # set spacer row borders for both cols
+        curRow = 7
+        while (curRow <= endSpacerRow):
+            # set left col border
+            ws.cell(row = curRow, column = curCol).border = spacerBorderLeft
+            # set right col border
+            ws.cell(row = curRow, column = curCol + 1).border = spacerBorderRight
+            curRow += 3    
+
+        # increment cur col by 2 to move onto next date
+        curCol += 2
 
 ####################################################################
 ### Function Title: mergeDate()
@@ -417,6 +473,10 @@ def main():
     # (update day date to be last day date from first sheet before passing to second sheet)
     dayDate = createDateCols(ws1, MID_DATE, startDateObj, 1, dayDate)
     createDateCols(ws2, endDate - MID_DATE, startDateObj, 16, dayDate)
+
+    # create rest of borders for blank areas that will get signatures/initials and times
+    createSigBorders(ws1, MID_DATE * 2)
+    createSigBorders(ws2, (endDate - MID_DATE) * 2)
     
     # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header for both sheets
