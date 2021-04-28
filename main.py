@@ -34,7 +34,7 @@ FZ = "Frozen"
 TCH = "Tech"
 TOA = "Time of Arrival"
 MID_DATE = 15
-CBOC_COL_WIDTH = 11.5
+CBOC_COL_WIDTH = 12.5
 HEADER_ROW_HEIGHT = 45
 CBOC_ROW_HEIGHT = 20
 DATE_ROW_HEIGHT = 22
@@ -57,17 +57,33 @@ thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "medium", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
 cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
-cbocNameFont = Font(name = 'Times New Roman', size = 9, bold = True)
+cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
 dateBorder = Border(left = thick, right = thick, bottom = thick)
 bigSpaceBorder = Border(left = thick, right = thick)
 spacerBorder = Border(left = thick, right = thick)
 cbocNameOnlyBorder = Border(top = double, left = thick, right = thick, bottom = thin)
 frozenOnlyBorder = Border(left = thick, right = thick, bottom = double)
 bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
-dateFont = Font(name = 'Calibri', size = 10, bold = True)
+dateFont = Font(name = 'Calibri', size = 11, bold = True)
+techFont = Font(name = 'Calibri', size = 9)
+toaFont = Font(name = 'Calibri', size = 5)
 
 ####################################################################
-### Function Title:
+### Function Title: setTechInfo()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def setTechInfo(ws, curCol, curRow):
+    ws.cell(row = curRow + 2, column = curCol).value = TCH
+    ws.cell(row = curRow + 2, column = curCol).font = techFont
+
+    ws.cell(row = curRow + 2, column = curCol + 1).value = TOA
+    ws.cell(row = curRow + 2, column = curCol + 1).font = toaFont
+    ws.cell(row = curRow + 2, column = curCol + 1).alignment = Alignment(wrap_text=True)
+
+####################################################################
+### Function Title: setDateInfo()
 ### Arguments:
 ### Returns:
 ### Description: 
@@ -111,11 +127,14 @@ def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate):
         
         # set the day date and name for the date/name cells
         setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow)
+
+        #set tech info (tech, arrival time)
+        setTechInfo(ws, curCol, curRow)
         
         # increment to get to second part of each date column
         curCol += 1
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
-        
+
         # increment to get to first column of new date
         curCol += 1
 
@@ -371,6 +390,7 @@ def main():
     
     # create rest of cols (date cols) for both sheets
     dayDate = startDateObj.weekday()
+    # (update day date to be last day date from first sheet before passing to second sheet)
     dayDate = createDateCols(ws1, MID_DATE, startDateObj, 1, dayDate)
     createDateCols(ws2, endDate - MID_DATE, startDateObj, 16, dayDate)
     
