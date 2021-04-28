@@ -73,7 +73,8 @@ bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 ####################################################################
 def setDateInfo(ws, curCol, dateTimeObj):
     #to get name of day (in number) from date
-    print('Day of Week (number): ', dateTimeObj.weekday())
+    dayDate = dateTimeObj.weekday()
+    print('Day of Week (number): ', dayDate)
     # to get name of day from date
     dayName = calendar.day_abbr[dateTimeObj.weekday()]
     dayName = dayName.upper()
