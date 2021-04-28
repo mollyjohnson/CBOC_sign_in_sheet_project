@@ -67,6 +67,8 @@ bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 dateFont = Font(name = 'Calibri', size = 11, bold = True)
 techFont = Font(name = 'Calibri', size = 9)
 toaFont = Font(name = 'Calibri', size = 5)
+dateBorderLeft = Border(top = thick, left = thick, bottom = thick)
+dateBorderRight = Border(top = thick, right = thick, bottom = thick)
 
 ####################################################################
 ### Function Title: mergeDate()
@@ -110,13 +112,16 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
     mergeDateInfo(ws, curRow, curCol)
     ws.cell(row = curRow, column = curCol).font = dateFont
     ws.cell(row = curRow, column = curCol).alignment = Alignment(horizontal='center')
-
+    ws.cell(row = curRow, column = curCol).border = dateBorderLeft
+    ws.cell(row = curRow, column = curCol + 1).border = dateBorderRight
 
     # set date num
     ws.cell(row = curRow + 1, column = curCol).value = dateNum
     mergeDateInfo(ws, curRow + 1, curCol)
     ws.cell(row = curRow + 1, column = curCol).font = dateFont
     ws.cell(row = curRow + 1, column = curCol).alignment = Alignment(horizontal='center')
+    ws.cell(row = curRow + 1, column = curCol).border = dateBorderLeft
+    ws.cell(row = curRow + 1, column = curCol + 1).border = dateBorderRight
 
 ####################################################################
 ### Function Title: createDateCols()
