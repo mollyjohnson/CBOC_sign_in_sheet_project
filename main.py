@@ -52,6 +52,7 @@ CBOC_NAME_AND_FROZEN_ROW_START = 5
 CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
 SPACER_ROWS = [7,10,13,16,19,22,25]
 NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
+WEEKEND_AND_HOL_COL_WIDTH = 2.5
 # set constant cell border values
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "medium", color = "000000")
@@ -77,6 +78,33 @@ sigBorderTopRight = Border(top = double, right = thick, bottom = thin)
 sigBorderBottomRight = Border(right = thick, left = thin, bottom = double)
 spacerBorderLeft = Border(right = thin, left = thick)
 spacerBorderRight = Border(right = thick, left = thin)
+weekendAndHolFillColor = PatternFill(fill_type = "solid", start_color = "BFBFBF", end_color = "BFBFBF")
+
+####################################################################
+### Function Title: setWeekendStyle()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def setWeekendStyle(ws, curCol, curRow):
+    endRow = NUM_ROWS
+    while(curRow <= endRow):
+        ws.cell(row = curRow, column = curCol).fill = weekendAndHolFillColor      
+        ws.cell(row = curRow, column = curCol + 1).fill = weekendAndHolFillColor      
+        ws.column_dimensions[get_column_letter(curCol)].width = WEEKEND_AND_HOL_COL_WIDTH
+        ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOL_COL_WIDTH
+        curRow += 1
+
+####################################################################
+### Function Title: isWeekend()
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def isWeekend(dayName):
+    if(dayName == "SAT" or dayName == "SUN"):
+        return True
+    return False
 
 ####################################################################
 ### Function Title: createSigBorders()
@@ -203,21 +231,26 @@ def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate):
     #regColWidth = 3.67
     regColWidth = 4.5 
     while (curCol <= (endCol * 2)):
-        ws.column_dimensions[get_column_letter(curCol)].width = regColWidth 
         
+        ws.column_dimensions[get_column_letter(curCol)].width = regColWidth 
+
         # set the day date and name for the date/name cells
         setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow)
-
         #set tech info (tech, arrival time)
         setTechInfo(ws, curCol, curRow)
+
+        
         
         # increment to get to second part of each date column
         curCol += 1
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
 
+        # check if is weekend
+        if(isWeekend(dayName) == True):
+            setWeekendStyle(ws, curCol - 1, curRow)
+
         # increment to get to first column of new date
         curCol += 1
-
         # increment the day and date
         dayDate += 1
         dateNum += 1
