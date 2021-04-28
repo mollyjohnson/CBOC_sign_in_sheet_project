@@ -66,6 +66,20 @@ frozenOnlyBorder = Border(left = thick, right = thick, bottom = double)
 bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
 
 ####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+def setDateInfo(ws, curCol, dateTimeObj):
+    #to get name of day (in number) from date
+    print('Day of Week (number): ', dateTimeObj.weekday())
+    # to get name of day from date
+    dayName = calendar.day_abbr[dateTimeObj.weekday()]
+    dayName = dayName.upper()
+    print('Day of Week (name): ', dayName)
+    
+####################################################################
 ### Function Title: createDateCols()
 ### Arguments:
 ### Returns:
@@ -79,9 +93,14 @@ def createDateCols(ws, endCol, dateTimeObj):
     regColWidth = 4.5 
     while (curCol <= (endCol * 2)):
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth 
+        
+        setDateInfo(ws, curCol, dateTimeObj)
+        
+        # increment to get to second part of each date column
         curCol += 1
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
-
+        
+        # increment to get to first column of new date
         curCol += 1
 
 ####################################################################
