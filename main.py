@@ -86,13 +86,19 @@ weekendAndHolFillColor = PatternFill(fill_type = "solid", start_color = "BFBFBF"
 ### Returns:
 ### Description: 
 ####################################################################
-def setWeekendStyle(ws, curCol, curRow):
+def setWeekendAndHolStyle(ws, curCol, curRow):
     endRow = NUM_ROWS
+    spacerRows = [7,10,13,16,19,22,25]
     while(curRow <= endRow):
         ws.cell(row = curRow, column = curCol).fill = weekendAndHolFillColor      
         ws.cell(row = curRow, column = curCol + 1).fill = weekendAndHolFillColor      
         ws.column_dimensions[get_column_letter(curCol)].width = WEEKEND_AND_HOL_COL_WIDTH
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOL_COL_WIDTH
+        if((curRow >= 5) and (curRow not in spacerRows)):
+            ws.cell(row = curRow, column = curCol).value = "X"
+            ws.cell(row = curRow, column = curCol + 1).value = "X"
+            ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
+            ws.cell(row = curRow, column = curCol + 1).font = Font(name = 'Calibri', size = 15, bold = True)
         curRow += 1
 
 ####################################################################
@@ -247,7 +253,7 @@ def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate):
 
         # check if is weekend
         if(isWeekend(dayName) == True):
-            setWeekendStyle(ws, curCol - 1, curRow)
+            setWeekendAndHolStyle(ws, curCol - 1, curRow)
 
         # increment to get to first column of new date
         curCol += 1
