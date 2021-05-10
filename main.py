@@ -20,6 +20,7 @@ from datetime import datetime
 import calendar
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
 from openpyxl.utils import get_column_letter
+import os
 
 # create constants
 JB = "Jesse Brown"
@@ -342,34 +343,19 @@ def setRowHeights(ws):
 ####################################################################
 def validUserInput(userInput):
     # check that length of user input string is correct
-    if(len(userInput) != 5):
+    if(len(userInput) != 4):
         return False
     
     # check that first two chars are digits, mid char
     # is / or -, and last 2 chars are digits.
-    j = 0
-    while(j < len(userInput)):
-        if(j != 2):
-            if(userInput[j].isdigit() == False):
+    i = 0
+    while(i < 4):
+        if(userInput[i].isdigit() == False):
                 return False
-        else:
-            if(userInput[j] != '-' and userInput[j] != '/'):
-                return False
-        j += 1
+        i += 1
     
-    # if the month and year chars were digits, make sure they make sense
-    monthInput = ""
-    yearInput = ""
-    monthInput += userInput[0]
-    monthInput += userInput[1]
-    yearInput += userInput[3]
-    yearInput += userInput[4]
-
-    # check that month is between 1 and 12
-    if(int(monthInput) < 1 or int(monthInput) > 12):
-        return False
     # check that year is between 2021 and 2099
-    if (int(yearInput) < 21 or int(yearInput) > 99):
+    if (int(userInput) < 2021):
         return False
     
     # otherwise met all requirements, return true
@@ -385,24 +371,15 @@ def getStartDate():
     # get start date of the month from user
     i = 0
     while(i == 0):
-        userInput = input("\nEnter month and year in the format mm/yy: ")
-        if(validUserInput(userInput) == True):
+        userInputYear = input("\nEnter year in the format yyyy: ")
+        if(validUserInput(userInputYear) == True):
             i = 1
         else:
-            print("Your entry was invalid. Enter month and year in the format mm/yy or mm-yy:")
+            print("Your entry was invalid. Enter year in the format yyyy:")
 
-    # reformat start date input into string for datetime in format mm-01-20yy
-    i = 0
-    startDate = "" 
-    while(i < len(userInput)):
-        if(i >= 0 and i <= 1):
-            startDate += userInput[i]
-        elif(i == 2):
-            startDate += "-01-20"
-        elif(i >= 3):
-            startDate += userInput[i]
-        i += 1
-    return startDate
+    # reformat start date input into string for datetime in format 01-01-20yy
+    startDate = "01-01-" + userInputYear
+    return startDate, userInputYear
 
 ####################################################################
 ### Function Title: createHeader()
@@ -476,55 +453,72 @@ def getDatetimeObj(startDate):
 ### Description: 
 ####################################################################
 def main():
-    # create workbook (1st sheet at pos 0 created automatically)
-    wb = Workbook()
-    ws1 = wb.active
-    ws1.title = "1-15"
+    currMonth = 1
+    endMonth = 12
 
-    # create 2nd sheet at pos 1
-    ws2 = wb.create_sheet("16-End", 1)
+    currDate, currYear = getStartDate()
     
-    # get start date string from user
-    startDate = getStartDate()
+    while (currMonth <= endMonth):
+        print("curr date is: " + currDate)
+        # create workbook (1st sheet at pos 0 created automatically)
+        wb = Workbook()
+        ws1 = wb.active
+        ws1.title = "1-15"
+    
+        # create 2nd sheet at pos 1
+        ws2 = wb.create_sheet("16-End", 1)
+        
+        # Create date object in format mm-dd-yyyy from start date string
+        dateTimeObj = getDatetimeObj(currDate)
+        
+        # get end date for the month
+        endDate = calendar.monthrange(dateTimeObj.year, dateTimeObj.month)[1]
+        print("End of month date: " + str(endDate))
+    
+        #to iterate to next date/day name
+        #print('Next date (num) of week: ', (startDateObj.day + 1))
+        #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
+    
+        # set row height for all rows
+        setRowHeights(ws1)
+        setRowHeights(ws2)
+        
+    
+        # create cboc cell font/border/values for both sheets
+        createCBOCCol(ws1)
+        createCBOCCol(ws2)
+        
+        # create rest of cols (date cols) for both sheets
+        dayDate = dateTimeObj.weekday()
+        # (update day date to be last day date from first sheet before passing to second sheet)
+        dayDate = createDateCols(ws1, MID_DATE, dateTimeObj, 1, dayDate)
+        createDateCols(ws2, endDate - MID_DATE, dateTimeObj, 16, dayDate)
+    
+        # create rest of borders for blank areas that will get signatures/initials and times
+        createSigBorders(ws1, MID_DATE * 2)
+        createSigBorders(ws2, (endDate - MID_DATE) * 2)
+        
+        # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
+        # create header for both sheets
+        createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
+        createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
+        print("end date minus mid date is: " + str(endDate) + " - " + str(MID_DATE) + " = " + str((endDate - MID_DATE)))
+        
+        # if is jan, create folder for all the sheets. otherwise you're already in the folder
+        if(currMonth == 1):
+            os.mkdir(str(currYear) + "_cboc_signin_sheets")
+            os.chdir(str(currYear) + "_cboc_signin_sheets")
 
-    # Create date object in format mm-dd-yyyy from start date string
-    startDateObj = getDatetimeObj(startDate)
-    
-    # get end date for the month
-    endDate = calendar.monthrange(startDateObj.year, startDateObj.month)[1]
-    print("End of month date: " + str(endDate))
+        # save workbook to excel file and exit
+        if(currMonth < 10):
+            strMonth = "0" + str(currMonth)
+        else:
+            strMonth = str(currMonth)
+        wb.save(strMonth + calendar.month_name[dateTimeObj.month] + "_" + str(dateTimeObj.year) + '_cboc_signin_sheet.xlsx')  
 
-    #to iterate to next date/day name
-    #print('Next date (num) of week: ', (startDateObj.day + 1))
-    #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
-
-    # set row height for all rows
-    setRowHeights(ws1)
-    setRowHeights(ws2)
-    
-
-    # create cboc cell font/border/values for both sheets
-    createCBOCCol(ws1)
-    createCBOCCol(ws2)
-    
-    # create rest of cols (date cols) for both sheets
-    dayDate = startDateObj.weekday()
-    # (update day date to be last day date from first sheet before passing to second sheet)
-    dayDate = createDateCols(ws1, MID_DATE, startDateObj, 1, dayDate)
-    createDateCols(ws2, endDate - MID_DATE, startDateObj, 16, dayDate)
-
-    # create rest of borders for blank areas that will get signatures/initials and times
-    createSigBorders(ws1, MID_DATE * 2)
-    createSigBorders(ws2, (endDate - MID_DATE) * 2)
-    
-    # def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
-    # create header for both sheets
-    createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, startDateObj)
-    createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, startDateObj)
-    print("end date minus mid date is: " + str(endDate) + " - " + str(MID_DATE) + " = " + str((endDate - MID_DATE)))
-    
-    # save workbook to excel file and exit
-    wb.save('cboc_signin_sheet.xlsx')   
+        #increment the month
+        currMonth += 1
+        currDate = str(currMonth) + "-01-" + str(currYear)
 
 if __name__ == "__main__":
     main()
