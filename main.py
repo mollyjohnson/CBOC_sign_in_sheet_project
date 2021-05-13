@@ -218,14 +218,25 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
     ws.cell(row = curRow + 1, column = curCol).alignment = Alignment(horizontal='center')
     ws.cell(row = curRow + 1, column = curCol).border = dateBorderLeft
     ws.cell(row = curRow + 1, column = curCol + 1).border = dateBorderRight
-
+    
+####################################################################
+### Function Title: isHoliday()
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+def isHoliday(holidayDates, dateNum):
+    if(dateNum in holidayDates):
+        return True
+    return False
+    
 ####################################################################
 ### Function Title: createDateCols()
 ### Arguments:
 ### Returns:
 ### Description: 
 ###################################################################
-def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate):
+def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate, holidayDates):
     #to get name of day (in number) from date
     # to get name of day from date
     dateNum = startDate
@@ -252,8 +263,8 @@ def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate):
         curCol += 1
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
 
-        # check if is weekend
-        if(isWeekend(dayName) == True):
+        # check if is weekend or holiday
+        if((isWeekend(dayName) == True) or (isHoliday(holidayDates, dateNum) == True)):
             setWeekendAndHolStyle(ws, curCol - 1, curRow)
 
         # increment to get to first column of new date
@@ -451,6 +462,23 @@ def getDatetimeObj(startDate):
 ### Arguments:
 ### Returns:
 ### Description: 
+####################################################################    
+def calcFedHolidays(dateTimeObj):
+    holidayDates = []
+    curDate = 1
+    endDate = calendar.monthrange(dateTimeObj.year, dateTimeObj.month)[1]
+
+    while(curDate <= endDate):
+
+        curDate += 1
+
+    return holidayDates
+
+####################################################################
+### Function Title: main()
+### Arguments:
+### Returns:
+### Description: 
 ####################################################################
 def main():
     currMonth = 1
@@ -464,6 +492,8 @@ def main():
         wb = Workbook()
         ws1 = wb.active
         ws1.title = "1-15"
+
+        
     
         # create 2nd sheet at pos 1
         ws2 = wb.create_sheet("16-End", 1)
@@ -474,7 +504,13 @@ def main():
         # get end date for the month
         endDate = calendar.monthrange(dateTimeObj.year, dateTimeObj.month)[1]
         print("End of month date: " + str(endDate))
-    
+        
+        # calculate holiday dates for the month
+        holidayDates = []
+        holidayDates = calcFedHolidays(dateTimeObj)
+        print("holiday dates for " + calendar.month_name[dateTimeObj.month] + " are: " )
+        for x in holidayDates:
+            print(x)
         #to iterate to next date/day name
         #print('Next date (num) of week: ', (startDateObj.day + 1))
         #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
@@ -491,8 +527,8 @@ def main():
         # create rest of cols (date cols) for both sheets
         dayDate = dateTimeObj.weekday()
         # (update day date to be last day date from first sheet before passing to second sheet)
-        dayDate = createDateCols(ws1, MID_DATE, dateTimeObj, 1, dayDate)
-        createDateCols(ws2, endDate - MID_DATE, dateTimeObj, 16, dayDate)
+        dayDate = createDateCols(ws1, MID_DATE, dateTimeObj, 1, dayDate, holidayDates)
+        createDateCols(ws2, endDate - MID_DATE, dateTimeObj, 16, dayDate, holidayDates)
     
         # create rest of borders for blank areas that will get signatures/initials and times
         createSigBorders(ws1, MID_DATE * 2)
