@@ -458,7 +458,7 @@ def getDatetimeObj(startDate):
     return dateTimeObj
     
 ####################################################################
-### Function Title: main()
+### Function Title: calcFedHolidays()
 ### Arguments:
 ### Returns:
 ### Description: 
@@ -467,8 +467,34 @@ def calcFedHolidays(dateTimeObj):
     holidayDates = []
     curDate = 1
     endDate = calendar.monthrange(dateTimeObj.year, dateTimeObj.month)[1]
+    monthName = calendar.month_name[dateTimeObj.month]
+    monthName = monthName.upper()
 
     while(curDate <= endDate):
+        if(monthName == "JANUARY"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "FEBRUARY"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "MARCH"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "APRIL"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "MAY"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "JUNE"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "JULY"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "AUGUST"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "SEPTEMBER"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "OCTOBER"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "NOVEMBER"):
+            print("calculating fed hols for " + monthName)
+        if(monthName == "DECEMBER"):
+            print("calculating fed hols for " + monthName)
 
         curDate += 1
 
@@ -542,7 +568,9 @@ def main():
         
         # if is jan, create folder for all the sheets. otherwise you're already in the folder
         if(currMonth == 1):
-            os.mkdir(str(currYear) + "_cboc_signin_sheets")
+            # if directory doesn't exist already, create it. then change to that directory from base directory either way
+            if(os.path.isdir(str(currYear) + "_cboc_signin_sheets") == False):
+                os.mkdir(str(currYear) + "_cboc_signin_sheets")
             os.chdir(str(currYear) + "_cboc_signin_sheets")
 
         # save workbook to excel file and exit
