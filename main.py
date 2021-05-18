@@ -200,10 +200,6 @@ def setTechInfo(ws, curCol, curRow):
 ### Description: sets the font/alignment/border for the day name and date of month
 ####################################################################
 def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
-    print('Day of Week (number): ', dayDate)
-    print('Day of Week (name): ', dayName)
-    print('Date of Month: ', dateNum)
-
     # set day name
     ws.cell(row = curRow, column = curCol).value = dayName
     mergeDateInfo(ws, curRow, curCol)
@@ -454,17 +450,17 @@ def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
 def getDatetimeObj(startDate):
     dateTimeObj = datetime.strptime(startDate, "%m-%d-%Y")
     #print start date string
-    print(startDate)
+    #print(startDate)
     #get day number from date
-    print('Day of Month: ', dateTimeObj.day)
+    #print('Day of Month: ', dateTimeObj.day)
     #get year from date
-    print('Year: ', dateTimeObj.year)
+    #print('Year: ', dateTimeObj.year)
     #to get name of day (in number) from date
-    print('Datetime day of Week (number): ', dateTimeObj.weekday())
+    #print('Datetime day of Week (number): ', dateTimeObj.weekday())
     # to get name of day from date
-    print('Datetime day of Week (name): ', calendar.day_abbr[dateTimeObj.weekday()])
+    #print('Datetime day of Week (name): ', calendar.day_abbr[dateTimeObj.weekday()])
     # to get name of month from date
-    print('Month name: ', calendar.month_name[dateTimeObj.month])
+    #print('Month name: ', calendar.month_name[dateTimeObj.month])
     return dateTimeObj
     
 ####################################################################
@@ -650,7 +646,6 @@ def main():
         # create header for both sheets
         createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
         createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
-        print("end date minus mid date is: " + str(endDate) + " - " + str(MID_DATE) + " = " + str((endDate - MID_DATE)))
         
         # if is jan, create folder for all the sheets. otherwise you're already in the folder
         if(currMonth == 1):
