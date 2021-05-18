@@ -604,6 +604,7 @@ def main():
     endMonth = 12
 
     currDate, currYear = getStartDate()
+    print("...excel spreadsheet creation in progress please wait...")
     
     while (currMonth <= endMonth):
         # create workbook (1st sheet at pos 0 created automatically)
@@ -664,6 +665,8 @@ def main():
         #increment the month
         currMonth += 1
         currDate = str(currMonth) + "-01-" + str(currYear)
+    
+    print("\nExcel spreadsheets completed please see folder: " + str(currYear) + "_cboc_signin_sheets for your excel files")
 
 if __name__ == "__main__":
     main()
