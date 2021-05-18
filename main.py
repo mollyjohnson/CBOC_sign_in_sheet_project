@@ -472,6 +472,7 @@ def calcFedHolidays(dateTimeObj):
     dayDate = dateTimeObj.weekday()
     dayName = calendar.day_abbr[dayDate]
     dayName = dayName.upper()
+    mlkMondays = 0
 
     while(curDate <= endDate):
         if(monthName == "JANUARY"):
@@ -482,6 +483,11 @@ def calcFedHolidays(dateTimeObj):
                 if(dayName == "SUN"):
                     holidayDates.append(curDate + 1)
                 else:
+                    holidayDates.append(curDate)
+            if(dayName == "MON"):
+                mlkMondays += 1
+                # mlk bday falls on 3rd monday of january
+                if(mlkMondays == 3):
                     holidayDates.append(curDate)
         if(monthName == "FEBRUARY"):
             print("calculating fed hols for " + monthName)
