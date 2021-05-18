@@ -475,6 +475,7 @@ def calcFedHolidays(dateTimeObj):
     mlkMondays = 0
     washBdayMondays = 0
     memorialDayLastMonInMayDate = 0
+    laborDayMon = 0
 
     while(curDate <= endDate):
         if(monthName == "JANUARY"):
@@ -509,14 +510,28 @@ def calcFedHolidays(dateTimeObj):
             # assigned to the variable (which can then be added later)
             if(dayName == "MON"):
                 memorialDayLastMonInMayDate = curDate
-        if(monthName == "JUNE"):
-            print("calculating fed hols for " + monthName)
+        # no fed hols for june
+        #if(monthName == "JUNE"):
+        #   print("calculating fed hols for " + monthName)
         if(monthName == "JULY"):
             print("calculating fed hols for " + monthName)
-        if(monthName == "AUGUST"):
-            print("calculating fed hols for " + monthName)
+            if(curDate == 4):
+                if(dayName == "SAT"):
+                    holidayDates.append(curDate - 1)
+                elif(dayName == "SUN"):
+                    holidayDates.append(curDate + 1)
+                else:
+                    holidayDates.append(curDate)
+        # no fed hols for august
+        #if(monthName == "AUGUST"):
+        #    print("calculating fed hols for " + monthName)
         if(monthName == "SEPTEMBER"):
             print("calculating fed hols for " + monthName)
+            if(dayName == "MON"):
+                laborDayMon += 1
+                # if is first mon of the month, that's labor day
+                if(laborDayMon == 1):
+                    holidayDates.append(curDate)
         if(monthName == "OCTOBER"):
             print("calculating fed hols for " + monthName)
         if(monthName == "NOVEMBER"):
