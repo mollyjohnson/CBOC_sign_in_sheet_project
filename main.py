@@ -473,6 +473,8 @@ def calcFedHolidays(dateTimeObj):
     dayName = calendar.day_abbr[dayDate]
     dayName = dayName.upper()
     mlkMondays = 0
+    washBdayMondays = 0
+    memorialDayLastMonInMayDate = 0
 
     while(curDate <= endDate):
         if(monthName == "JANUARY"):
@@ -482,7 +484,7 @@ def calcFedHolidays(dateTimeObj):
                 # if new year's occurs on a sun, push it to mon
                 if(dayName == "SUN"):
                     holidayDates.append(curDate + 1)
-                else:
+                elif(dayName != "SAT"):
                     holidayDates.append(curDate)
             if(dayName == "MON"):
                 mlkMondays += 1
@@ -491,12 +493,22 @@ def calcFedHolidays(dateTimeObj):
                     holidayDates.append(curDate)
         if(monthName == "FEBRUARY"):
             print("calculating fed hols for " + monthName)
-        if(monthName == "MARCH"):
-            print("calculating fed hols for " + monthName)
-        if(monthName == "APRIL"):
-            print("calculating fed hols for " + monthName)
+            if(dayName == "MON"):
+                washBdayMondays += 1
+                if(washBdayMondays == 3):
+                    holidayDates.append(curDate)
+        # no fed hols for march or april
+        #if(monthName == "MARCH"):
+        #    print("calculating fed hols for " + monthName)
+        #if(monthName == "APRIL"):
+        #    print("calculating fed hols for " + monthName)
         if(monthName == "MAY"):
             print("calculating fed hols for " + monthName)
+            # keep replacing last monday in may w the current one,
+            # such that the last monday in may will be the last value
+            # assigned to the variable (which can then be added later)
+            if(dayName == "MON"):
+                memorialDayLastMonInMayDate = curDate
         if(monthName == "JUNE"):
             print("calculating fed hols for " + monthName)
         if(monthName == "JULY"):
@@ -511,6 +523,9 @@ def calcFedHolidays(dateTimeObj):
             print("calculating fed hols for " + monthName)
         if(monthName == "DECEMBER"):
             print("calculating fed hols for " + monthName)
+            # if new year's occurs on a sat, add fri dec 31 to hols
+            if((curDate == 31) and (dayName == "FRI")):
+                holidayDates.append(curDate) 
 
         curDate += 1
         dayDate += 1
@@ -519,6 +534,10 @@ def calcFedHolidays(dateTimeObj):
             dayDate = 0
         dayName = calendar.day_abbr[dayDate]
         dayName = dayName.upper()
+
+    # if month is may, add last monday for memorial day
+    if(monthName == "MAY"):
+        holidayDates.append(memorialDayLastMonInMayDate)
 
     return holidayDates
 
