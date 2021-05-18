@@ -386,7 +386,7 @@ def getStartDate():
         if(validUserInput(userInputYear) == True):
             i = 1
         else:
-            print("Your entry was invalid. Enter year in the format yyyy:")
+            print("Your entry was invalid or a previous year. Enter current year in the format yyyy:")
 
     # reformat start date input into string for datetime in format 01-01-20yy
     startDate = "01-01-" + userInputYear
@@ -476,6 +476,8 @@ def calcFedHolidays(dateTimeObj):
     washBdayMondays = 0
     memorialDayLastMonInMayDate = 0
     laborDayMon = 0
+    columbusDayMon = 0
+    thanksgivingThurs = 0
 
     while(curDate <= endDate):
         if(monthName == "JANUARY"):
@@ -534,13 +536,38 @@ def calcFedHolidays(dateTimeObj):
                     holidayDates.append(curDate)
         if(monthName == "OCTOBER"):
             print("calculating fed hols for " + monthName)
+            if(dayName == "MON"):
+                columbusDayMon += 1
+                # if is second mon of month, that's columbus day
+                if(columbusDayMon == 2):
+                    holidayDates.append(curDate)
         if(monthName == "NOVEMBER"):
             print("calculating fed hols for " + monthName)
+            # veteran's day celebrated 11th of nov
+            if(curDate == 11):
+                if(dayName == "SAT"):
+                    holidayDates.append(curDate - 1)
+                elif(dayName == "SUN"):
+                    holidayDates.append(curDate + 1)
+                else:
+                    holidayDates.append(curDate)
+            if(dayName == "THU"):
+                thanksgivingThurs += 1
+                # if is 4th thurs of month, that's thanksgiving
+                if(thanksgivingThurs == 4):
+                    holidayDates.append(curDate)
         if(monthName == "DECEMBER"):
             print("calculating fed hols for " + monthName)
             # if new year's occurs on a sat, add fri dec 31 to hols
             if((curDate == 31) and (dayName == "FRI")):
                 holidayDates.append(curDate) 
+            if(curDate == 25):
+                if(dayName == "SAT"):
+                    holidayDates.append(curDate - 1)
+                elif(dayName == "SUN"):
+                    holidayDates.append(curDate + 1)
+                else:
+                    holidayDates.append(curDate)
 
         curDate += 1
         dayDate += 1
