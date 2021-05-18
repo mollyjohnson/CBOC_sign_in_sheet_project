@@ -3,15 +3,8 @@
 # Author: Molly Johnson
 # Date: 3/24/21
 # Description: Creates cboc signin excel file for
-# checking in clinics for one month. Will adjust 
+# checking in clinics for every month in one year. Will adjust 
 # for the days of the month, weekends, and federal holidays
-
-####################################################################
-### Function Title:
-### Arguments:
-### Returns:
-### Description: 
-####################################################################
 
 # import openpyxl, datetime, and calendar
 import openpyxl
@@ -83,18 +76,23 @@ weekendAndHolFillColor = PatternFill(fill_type = "solid", start_color = "BFBFBF"
 
 ####################################################################
 ### Function Title: setWeekendStyle()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet, the current col, the current row
+### Returns: nothing
+### Description: adjusts the width of the columns to narrower, grays out
+### all cells in the column, and places x's in the signature/time areas,
+### since no CBOC's are received on weekends or federal holidays
 ####################################################################
 def setWeekendAndHolStyle(ws, curCol, curRow):
     endRow = NUM_ROWS
     spacerRows = [7,10,13,16,19,22,25]
+    # adjust fill color and col width for all rows in the column
     while(curRow <= endRow):
         ws.cell(row = curRow, column = curCol).fill = weekendAndHolFillColor      
         ws.cell(row = curRow, column = curCol + 1).fill = weekendAndHolFillColor      
         ws.column_dimensions[get_column_letter(curCol)].width = WEEKEND_AND_HOL_COL_WIDTH
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOL_COL_WIDTH
+
+        # place "X's" in the signature/time spaces so they can't be marked in. skip spacer rows
         if((curRow >= 5) and (curRow not in spacerRows)):
             ws.cell(row = curRow, column = curCol).value = "X"
             ws.cell(row = curRow, column = curCol + 1).value = "X"
@@ -104,9 +102,10 @@ def setWeekendAndHolStyle(ws, curCol, curRow):
 
 ####################################################################
 ### Function Title: isWeekend()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: day name
+### Returns: boolean
+### Description: checks if the day name passed in is a weekend day
+### name. if yes returns true, otherwise returns false
 ####################################################################
 def isWeekend(dayName):
     if(dayName == "SAT" or dayName == "SUN"):
@@ -115,9 +114,9 @@ def isWeekend(dayName):
 
 ####################################################################
 ### Function Title: createSigBorders()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet, end column
+### Returns: nothing
+### Description: adjusts the borders for all of the signature cells
 ####################################################################
 def createSigBorders(ws, endCol):
     startCol = 2
@@ -165,9 +164,9 @@ def createSigBorders(ws, endCol):
 
 ####################################################################
 ### Function Title: mergeDate()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet, start row, start column
+### Returns: nothing
+### Description: merges two date info cells
 ####################################################################
 def mergeDateInfo(ws, startRow, startCol):
     data = ws.cell(row = startRow, column = startCol).value
@@ -177,9 +176,10 @@ def mergeDateInfo(ws, startRow, startCol):
 
 ####################################################################
 ### Function Title: setTechInfo()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet, current column, current row
+### Returns: nothing
+### Description: adjusts the font/border for the tech and time of
+### arrival cells
 ####################################################################
 def setTechInfo(ws, curCol, curRow):
     ws.cell(row = curRow + 2, column = curCol).value = TCH
@@ -194,16 +194,17 @@ def setTechInfo(ws, curCol, curRow):
 
 ####################################################################
 ### Function Title: setDateInfo()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet, current column, the day of the week number (dayDate),
+### the day of the week name, the date number (i.e. date of the month), current row
+### Returns: nothing
+### Description: sets the font/alignment/border for the day name and date of month
 ####################################################################
 def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
     print('Day of Week (number): ', dayDate)
     print('Day of Week (name): ', dayName)
     print('Date of Month: ', dateNum)
 
-    # set date name
+    # set day name
     ws.cell(row = curRow, column = curCol).value = dayName
     mergeDateInfo(ws, curRow, curCol)
     ws.cell(row = curRow, column = curCol).font = dateFont
@@ -221,9 +222,10 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
     
 ####################################################################
 ### Function Title: isHoliday()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: holiday dates list, date num (date of the month)
+### Returns: boolean
+### Description: checks if a specific date is in the previously
+### calculated holiday dates list. if yes returns true otherwise false
 ###################################################################
 def isHoliday(holidayDates, dateNum):
     if(dateNum in holidayDates):
@@ -232,9 +234,11 @@ def isHoliday(holidayDates, dateNum):
     
 ####################################################################
 ### Function Title: createDateCols()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet, end column, date time object, start date,
+### day date (date in the week number), holiday dates list
+### Returns: the day date (day in the week number) so can be used for second sheet
+### Description: creates/sets the width/borders/font/alignment for each cell
+### in each date column. adjusts for if that date is a federal holiday or weekend
 ###################################################################
 def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate, holidayDates):
     #to get name of day (in number) from date
@@ -283,9 +287,10 @@ def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate, holidayDates):
 
 ####################################################################
 ### Function Title: createCBOCCOL()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet
+### Returns: nothing
+### Description: creates the column/font/border for the cboc column
+### (which has all cboc names and a row for frozens from each)
 ###################################################################
 def createCBOCCol(ws):
     # create cboc col border and font
@@ -330,9 +335,11 @@ def createCBOCCol(ws):
     
 ####################################################################
 ### Function Title: setRowHeights()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet
+### Returns: nothing
+### Description: adjusts all row heights depending on which row it is
+### (header row, cboc row, date row, tech/time of arrival row, spacer rows,
+### cboc name/frozens row)
 ####################################################################
 def setRowHeights(ws):
     ws.row_dimensions[HEADER_ROW].height = HEADER_ROW_HEIGHT
@@ -348,9 +355,11 @@ def setRowHeights(ws):
 
 ####################################################################
 ### Function Title: validUserInput()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: user input (a 4-digit year in string format)
+### Returns: boolean
+### Description: checks if the user entered a 4-digit int, and if it's
+### a year greater than or equal to the current year (2021). returns
+### true if valid, false otherwise
 ####################################################################
 def validUserInput(userInput):
     # check that length of user input string is correct
@@ -374,9 +383,17 @@ def validUserInput(userInput):
 
 ####################################################################
 ### Function Title: getStartDate()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: none
+### Returns: start date (in format mm-dd-yyyy) and the year input by
+### user (in format yyyy)
+### Description: gets input from the user. checks if is a valid year
+### in formay yyyy and if is greater than or equal to 2021 (current year).
+### if input is invalid, prints error message to the user and keeps asking
+### for input until valid input is received. will then use the user's input
+### year to create a valid start date that can be used with strptime to get
+### a datetime object (which must be in format mm-dd-yyyy). always starts with
+### jan 1 of whatever year requested by the user since will create an entire
+### year's worth of cboc sheets starting in january
 ####################################################################
 def getStartDate():
     # get start date of the month from user
@@ -394,9 +411,10 @@ def getStartDate():
 
 ####################################################################
 ### Function Title: createHeader()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: worksheet, start row, start column, end row, end column,
+### start date object
+### Returns: nothing
+### Description: creates/merges the header cell with month name/year
 ####################################################################
 def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header border formatting
@@ -407,11 +425,7 @@ def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # font values
     headerFont = Font(name = 'Times New Roman', size = 28, bold = True)    
     
-    ###################NEED TO USE NUMBERS NOT LETTERS FOR CELLS HERE
-    #set header alignment to center, font to Times New Roman and size to 28
-    #ws['A1'].alignment = Alignment(vertical = 'bottom')
     ws.cell(row = startRow, column = startCol).alignment = Alignment(vertical = 'bottom')
-    #ws['A1'].alignment = Alignment(horizontal = 'center')
     ws.cell(row = startRow, column = startCol).alignment = Alignment(horizontal = 'center')
     ws.cell(row = startRow, column = startCol).font = headerFont
     
@@ -425,11 +439,6 @@ def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
             cell.border = headerBorderMid 
             
     # create header and merge cells A1 through AE1
-    #ws['A1'] = ("Month/Year: " + (str(calendar.month_name[startDateObj.month]) + " " + 
-        #str(startDateObj.year)).upper())
-    #data = ws['A1'].value 
-    #ws.merge_cells('A1:AE1')
-    #ws['A1'] = data 
     ws.cell(row = startRow, column = startCol).value =  ("Month/Year: " + (str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year)).upper())
     data = ws.cell(row = startRow, column = startCol).value
     ws.merge_cells(start_row = startRow, start_column = startCol, end_row = endRow, end_column = endCol)
@@ -437,9 +446,10 @@ def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
 
 ####################################################################
 ### Function Title: getDateTimeObj()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: start date (format mm-dd-yyyy)
+### Returns: datetime object
+### Description: returns the datetime object created using strptime
+### from the date provided in mm-dd-yyyy format
 ####################################################################   
 def getDatetimeObj(startDate):
     dateTimeObj = datetime.strptime(startDate, "%m-%d-%Y")
@@ -459,9 +469,11 @@ def getDatetimeObj(startDate):
     
 ####################################################################
 ### Function Title: calcFedHolidays()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: datetime object
+### Returns: list of federal holiday dates for a given month
+### Description: calculates all federal holiday dates for a given month
+### (month provided by the datetime object). will adjust for if the
+### federal holiday occurs on a saturday or sunday as needed
 ####################################################################    
 def calcFedHolidays(dateTimeObj):
     holidayDates = []
@@ -479,9 +491,9 @@ def calcFedHolidays(dateTimeObj):
     columbusDayMon = 0
     thanksgivingThurs = 0
 
+    # loop through every day in the month and add holiday dates to the list as appropriate
     while(curDate <= endDate):
         if(monthName == "JANUARY"):
-            print("calculating fed hols for " + monthName)
             if(curDate == 1):
                 # if new year's occurs on a sat, will be taken care of in dec
                 # if new year's occurs on a sun, push it to mon
@@ -495,58 +507,50 @@ def calcFedHolidays(dateTimeObj):
                 if(mlkMondays == 3):
                     holidayDates.append(curDate)
         if(monthName == "FEBRUARY"):
-            print("calculating fed hols for " + monthName)
             if(dayName == "MON"):
                 washBdayMondays += 1
+                # washington's bday falls on 3rd monday of the month
                 if(washBdayMondays == 3):
                     holidayDates.append(curDate)
         # no fed hols for march or april
-        #if(monthName == "MARCH"):
-        #    print("calculating fed hols for " + monthName)
-        #if(monthName == "APRIL"):
-        #    print("calculating fed hols for " + monthName)
         if(monthName == "MAY"):
-            print("calculating fed hols for " + monthName)
             # keep replacing last monday in may w the current one,
             # such that the last monday in may will be the last value
             # assigned to the variable (which can then be added later)
             if(dayName == "MON"):
                 memorialDayLastMonInMayDate = curDate
         # no fed hols for june
-        #if(monthName == "JUNE"):
-        #   print("calculating fed hols for " + monthName)
         if(monthName == "JULY"):
-            print("calculating fed hols for " + monthName)
+            # 4th of july holiday
             if(curDate == 4):
+                # if 4th holiday occurs on a sat, add fri to list.
                 if(dayName == "SAT"):
                     holidayDates.append(curDate - 1)
+                # if 4th holiday occurs on a sun, add mon to list
                 elif(dayName == "SUN"):
                     holidayDates.append(curDate + 1)
                 else:
                     holidayDates.append(curDate)
         # no fed hols for august
-        #if(monthName == "AUGUST"):
-        #    print("calculating fed hols for " + monthName)
         if(monthName == "SEPTEMBER"):
-            print("calculating fed hols for " + monthName)
             if(dayName == "MON"):
                 laborDayMon += 1
                 # if is first mon of the month, that's labor day
                 if(laborDayMon == 1):
                     holidayDates.append(curDate)
         if(monthName == "OCTOBER"):
-            print("calculating fed hols for " + monthName)
             if(dayName == "MON"):
                 columbusDayMon += 1
                 # if is second mon of month, that's columbus day
                 if(columbusDayMon == 2):
                     holidayDates.append(curDate)
         if(monthName == "NOVEMBER"):
-            print("calculating fed hols for " + monthName)
             # veteran's day celebrated 11th of nov
             if(curDate == 11):
+                # if 11h is a sat, add fri to hols list
                 if(dayName == "SAT"):
                     holidayDates.append(curDate - 1)
+                # if 11th is a sun, add mon to hols list
                 elif(dayName == "SUN"):
                     holidayDates.append(curDate + 1)
                 else:
@@ -557,13 +561,15 @@ def calcFedHolidays(dateTimeObj):
                 if(thanksgivingThurs == 4):
                     holidayDates.append(curDate)
         if(monthName == "DECEMBER"):
-            print("calculating fed hols for " + monthName)
             # if new year's occurs on a sat, add fri dec 31 to hols
             if((curDate == 31) and (dayName == "FRI")):
                 holidayDates.append(curDate) 
+            # 25th = christmas
             if(curDate == 25):
+                # if 25th is on a sat, add fri to hols list
                 if(dayName == "SAT"):
                     holidayDates.append(curDate - 1)
+                # if 25th is on a sun, add mon to hols list
                 elif(dayName == "SUN"):
                     holidayDates.append(curDate + 1)
                 else:
@@ -585,9 +591,17 @@ def calcFedHolidays(dateTimeObj):
 
 ####################################################################
 ### Function Title: main()
-### Arguments:
-### Returns:
-### Description: 
+### Arguments: none
+### Returns: none
+### Description: has loop for each month of the given year chosen by
+### the user. creates workbook and 2 worksheets per month. calls other
+### functions used to get user info, get the datetime object, calculate
+### the num of days in the month, calculate the federal holidays, set
+### all row and column info for all cells in the cboc signin sheet,
+### creates a folder for each year's worksheets (unless the folder
+### already exists), and saves all excel spreadsheets using the month
+### number/name formatted so that it will have them in correct month
+### order in the folder (jan - dec for the given year).
 ####################################################################
 def main():
     currMonth = 1
@@ -596,13 +610,10 @@ def main():
     currDate, currYear = getStartDate()
     
     while (currMonth <= endMonth):
-        print("curr date is: " + currDate)
         # create workbook (1st sheet at pos 0 created automatically)
         wb = Workbook()
         ws1 = wb.active
         ws1.title = "1-15"
-
-        
     
         # create 2nd sheet at pos 1
         ws2 = wb.create_sheet("16-End", 1)
@@ -612,22 +623,14 @@ def main():
         
         # get end date for the month
         endDate = calendar.monthrange(dateTimeObj.year, dateTimeObj.month)[1]
-        print("End of month date: " + str(endDate))
         
         # calculate holiday dates for the month
         holidayDates = []
         holidayDates = calcFedHolidays(dateTimeObj)
-        print("holiday dates for " + calendar.month_name[dateTimeObj.month] + " are: " )
-        for x in holidayDates:
-            print(x)
-        #to iterate to next date/day name
-        #print('Next date (num) of week: ', (startDateObj.day + 1))
-        #print('Next day of week (name): ', calendar.day_abbr[(startDateObj.weekday()) + 1])
     
         # set row height for all rows
         setRowHeights(ws1)
         setRowHeights(ws2)
-        
     
         # create cboc cell font/border/values for both sheets
         createCBOCCol(ws1)
