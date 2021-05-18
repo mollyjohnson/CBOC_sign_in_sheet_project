@@ -469,10 +469,20 @@ def calcFedHolidays(dateTimeObj):
     endDate = calendar.monthrange(dateTimeObj.year, dateTimeObj.month)[1]
     monthName = calendar.month_name[dateTimeObj.month]
     monthName = monthName.upper()
+    dayDate = dateTimeObj.weekday()
+    dayName = calendar.day_abbr[dayDate]
+    dayName = dayName.upper()
 
     while(curDate <= endDate):
         if(monthName == "JANUARY"):
             print("calculating fed hols for " + monthName)
+            if(curDate == 1):
+                # if new year's occurs on a sat, will be taken care of in dec
+                # if new year's occurs on a sun, push it to mon
+                if(dayName == "SUN"):
+                    holidayDates.append(curDate + 1)
+                else:
+                    holidayDates.append(curDate)
         if(monthName == "FEBRUARY"):
             print("calculating fed hols for " + monthName)
         if(monthName == "MARCH"):
@@ -497,6 +507,12 @@ def calcFedHolidays(dateTimeObj):
             print("calculating fed hols for " + monthName)
 
         curDate += 1
+        dayDate += 1
+        #if day number is > 6, i.e. you've reached end of week, start week days over
+        if (dayDate > 6):
+            dayDate = 0
+        dayName = calendar.day_abbr[dayDate]
+        dayName = dayName.upper()
 
     return holidayDates
 
