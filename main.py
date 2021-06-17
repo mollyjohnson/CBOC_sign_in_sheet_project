@@ -15,7 +15,7 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Fo
 from openpyxl.utils import get_column_letter
 import os
 
-# create constants
+# create "constants"
 JB = "Jesse Brown"
 CP = "Crown Point"
 HE = "Hoffman Est."
@@ -47,7 +47,7 @@ CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
 SPACER_ROWS = [7,10,13,16,19,22,25]
 NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
 WEEKEND_AND_HOL_COL_WIDTH = 2.5
-# set constant cell border values
+# set "constant" cell border values
 thin = Side(border_style = "thin", color = "000000")
 double = Side(border_style = "medium", color = "000000")
 thick = Side(border_style = "thick", color = "001C54")
