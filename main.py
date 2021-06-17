@@ -515,7 +515,17 @@ def calcFedHolidays(dateTimeObj):
             # assigned to the variable (which can then be added later)
             if(dayName == "MON"):
                 memorialDayLastMonInMayDate = curDate
-        # no fed hols for june
+        if(monthName == "JUNE"):
+            # juneteenth holiday
+            if(curDate == 19):
+                # if 19th occurs on a sat, add fri to list
+                if(dayName == "SAT"):
+                    holidayDates.append(curDate - 1)
+                # if 19th holiday occurs on a sun, add mon to list
+                elif(dayName == "SUN"):
+                    holidayDates.append(curDate + 1)
+                else:
+                    holidayDates.append(curDate)
         if(monthName == "JULY"):
             # 4th of july holiday
             if(curDate == 4):
@@ -666,7 +676,7 @@ def main():
         currMonth += 1
         currDate = str(currMonth) + "-01-" + str(currYear)
     
-    print("\nExcel spreadsheets completed please see folder: " + str(currYear) + "_cboc_signin_sheets for your excel files")
+    print("\nExcel spreadsheets creation completed please see folder: " + str(currYear) + "_cboc_signin_sheets for your excel files")
 
 if __name__ == "__main__":
     main()
