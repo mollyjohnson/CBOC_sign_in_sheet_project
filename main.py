@@ -676,7 +676,9 @@ def main():
         currMonth += 1
         currDate = str(currMonth) + "-01-" + str(currYear)
     
-    print("\nExcel spreadsheets creation completed please see folder: " + str(currYear) + "_cboc_signin_sheets for your excel files")
+    print("\nSpreadsheets created, see folder: " + str(currYear) + "_cboc_signin_sheets for your files.")
+    print("Press \"Enter\" to finish.")
+    input()
 
 if __name__ == "__main__":
     main()
