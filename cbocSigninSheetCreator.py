@@ -46,33 +46,33 @@ CBOC_NAME_AND_FROZEN_ROW_START = 5
 CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
 SPACER_ROWS = [7,10,13,16,19,22,25]
 NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
-WEEKEND_AND_HOL_COL_WIDTH = 2.5
+WEEKEND_AND_HOLIDAY_COL_WIDTH = 2.5
 # set "constant" cell border values
-thin = Side(border_style = "thin", color = "000000")
-double = Side(border_style = "medium", color = "000000")
-thick = Side(border_style = "thick", color = "001C54")
-cbocNameBorder = Border(top = thick , left = thick, right = thick, bottom = thick) 
-cbocNameFont = Font(name = 'Times New Roman', size = 10, bold = True)
-dateBorder = Border(left = thick, right = thick, bottom = thick)
-bigSpaceBorder = Border(left = thick, right = thick)
-spacerBorder = Border(left = thick, right = thick)
-cbocNameOnlyBorder = Border(top = double, left = thick, right = thick, bottom = thin)
-frozenOnlyBorder = Border(left = thick, right = thick, bottom = double)
-bottomRowBorderCBOCName = Border(left = thick, right = thick, bottom = thick)
-dateFont = Font(name = 'Calibri', size = 11, bold = True)
-techFont = Font(name = 'Calibri', size = 9)
-toaFont = Font(name = 'Calibri', size = 5)
-dateBorderLeft = Border(top = thick, left = thick, bottom = thick)
-dateBorderRight = Border(top = thick, right = thick, bottom = thick)
-techInfoBorderLeft = Border(left = thick, right = thin, bottom = double)
-techInfoBorderRight = Border(right = thick, bottom = double)
-sigBorderTopLeft = Border(top = double, left = thick, right = thin, bottom = thin)
-sigBorderBottomLeft = Border(left = thick, right = thin, bottom = double)
-sigBorderTopRight = Border(top = double, right = thick, bottom = thin)
-sigBorderBottomRight = Border(right = thick, left = thin, bottom = double)
-spacerBorderLeft = Border(right = thin, left = thick)
-spacerBorderRight = Border(right = thick, left = thin)
-weekendAndHolFillColor = PatternFill(fill_type = "solid", start_color = "BFBFBF", end_color = "BFBFBF")
+THIN = Side(border_style = "thin", color = "000000")
+DOUBLE = Side(border_style = "medium", color = "000000")
+THICK = Side(border_style = "thick", color = "001C54")
+CBOC_NAME_BORDER = Border(top = THICK , left = THICK, right = THICK, bottom = THICK) 
+CBOC_NAME_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
+DATE_BORDER = Border(left = THICK, right = THICK, bottom = THICK)
+BIG_SPACE_BORDER = Border(left = THICK, right = THICK)
+SPACER_BORDER = Border(left = THICK, right = THICK)
+CBOC_NAME_ONLY_BORDER = Border(top = DOUBLE, left = THICK, right = THICK, bottom = THIN)
+FROZEN_ONLY_BORDER = Border(left = THICK, right = THICK, bottom = DOUBLE)
+BOTTOM_ROW_BORDER_CBOC_NAME = Border(left = THICK, right = THICK, bottom = THICK)
+DATE_FONT = Font(name = 'Calibri', size = 11, bold = True)
+TECH_FONT = Font(name = 'Calibri', size = 9)
+TOA_FONT = Font(name = 'Calibri', size = 5)
+DATE_BORDER_LEFT = Border(top = THICK, left = THICK, bottom = THICK)
+DATE_BORDER_RIGHT = Border(top = THICK, right = THICK, bottom = THICK)
+TECH_INFO_BORDER_LEFT = Border(left = THICK, right = THIN, bottom = DOUBLE)
+TECH_INFO_BORDER_RIGHT = Border(right = THICK, bottom = DOUBLE)
+SIGNATURE_BORDER_TOP_LEFT = Border(top = DOUBLE, left = THICK, right = THIN, bottom = THIN)
+SIGNATURE_BORDER_BOTTOM_LEFT = Border(left = THICK, right = THIN, bottom = DOUBLE)
+SIGNATURE_BORDER_TOP_RIGHT = Border(top = DOUBLE, right = THICK, bottom = THIN)
+SIGNATURE_BORDER_BOTTOM_RIGHT = Border(right = THICK, left = THIN, bottom = DOUBLE)
+SPACER_BORDER_LEFT = Border(right = THIN, left = THICK)
+SPACER_BORDER_RIGHT = Border(right = THICK, left = THIN)
+WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = "BFBFBF", end_color = "BFBFBF")
 
 ####################################################################
 ### Function Title: setWeekendStyle()
@@ -87,10 +87,10 @@ def setWeekendAndHolStyle(ws, curCol, curRow):
     spacerRows = [7,10,13,16,19,22,25]
     # adjust fill color and col width for all rows in the column
     while(curRow <= endRow):
-        ws.cell(row = curRow, column = curCol).fill = weekendAndHolFillColor      
-        ws.cell(row = curRow, column = curCol + 1).fill = weekendAndHolFillColor      
-        ws.column_dimensions[get_column_letter(curCol)].width = WEEKEND_AND_HOL_COL_WIDTH
-        ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOL_COL_WIDTH
+        ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        ws.cell(row = curRow, column = curCol + 1).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        ws.column_dimensions[get_column_letter(curCol)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
+        ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
 
         # place "X's" in the signature/time spaces so they can't be marked in. skip spacer rows
         if((curRow >= 5) and (curRow not in spacerRows)):
@@ -131,32 +131,32 @@ def createSigBorders(ws, endCol):
         curRow = startRow
         while (curRow <= endCbocNameRow):
             # set left col border
-            ws.cell(row = curRow, column = curCol).border = sigBorderTopLeft
+            ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_TOP_LEFT
             # set right col border
-            ws.cell(row = curRow, column = curCol + 1).border = sigBorderTopRight
+            ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_TOP_RIGHT
             curRow += 3
 
         # set frozen name row borders for both cols
         curRow = 6
         while (curRow <= endRow):
             # set left col border
-            ws.cell(row = curRow, column = curCol).border = sigBorderBottomLeft
+            ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
             # set right col border
-            ws.cell(row = curRow, column = curCol + 1).border = sigBorderBottomRight
+            ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT
             if(curRow == endRow):
-                # set left col border bottom to thick if last row
-                ws.cell(row = curRow, column = curCol).border = Border(right = thin, bottom = thick)
-                # set right col border bottom to thick if last row
-                ws.cell(row = curRow, column = curCol + 1).border = Border(right = thick, bottom = thick)
+                # set left col border bottom to THICK if last row
+                ws.cell(row = curRow, column = curCol).border = Border(right = THIN, bottom = THICK)
+                # set right col border bottom to THICK if last row
+                ws.cell(row = curRow, column = curCol + 1).border = Border(right = THICK, bottom = THICK)
             curRow += 3
 
         # set spacer row borders for both cols
         curRow = 7
         while (curRow <= endSpacerRow):
             # set left col border
-            ws.cell(row = curRow, column = curCol).border = spacerBorderLeft
+            ws.cell(row = curRow, column = curCol).border = SPACER_BORDER_LEFT
             # set right col border
-            ws.cell(row = curRow, column = curCol + 1).border = spacerBorderRight
+            ws.cell(row = curRow, column = curCol + 1).border = SPACER_BORDER_RIGHT
             curRow += 3    
 
         # increment cur col by 2 to move onto next date
@@ -183,13 +183,13 @@ def mergeDateInfo(ws, startRow, startCol):
 ####################################################################
 def setTechInfo(ws, curCol, curRow):
     ws.cell(row = curRow + 2, column = curCol).value = TCH
-    ws.cell(row = curRow + 2, column = curCol).font = techFont
-    ws.cell(row = curRow + 2, column = curCol).border = techInfoBorderLeft
+    ws.cell(row = curRow + 2, column = curCol).font = TECH_FONT
+    ws.cell(row = curRow + 2, column = curCol).border = TECH_INFO_BORDER_LEFT
     
 
     ws.cell(row = curRow + 2, column = curCol + 1).value = TOA
-    ws.cell(row = curRow + 2, column = curCol + 1).font = toaFont
-    ws.cell(row = curRow + 2, column = curCol + 1).border = techInfoBorderRight
+    ws.cell(row = curRow + 2, column = curCol + 1).font = TOA_FONT
+    ws.cell(row = curRow + 2, column = curCol + 1).border = TECH_INFO_BORDER_RIGHT
     ws.cell(row = curRow + 2, column = curCol + 1).alignment = Alignment(wrap_text=True)
 
 ####################################################################
@@ -203,18 +203,18 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
     # set day name
     ws.cell(row = curRow, column = curCol).value = dayName
     mergeDateInfo(ws, curRow, curCol)
-    ws.cell(row = curRow, column = curCol).font = dateFont
+    ws.cell(row = curRow, column = curCol).font = DATE_FONT
     ws.cell(row = curRow, column = curCol).alignment = Alignment(horizontal='center')
-    ws.cell(row = curRow, column = curCol).border = dateBorderLeft
-    ws.cell(row = curRow, column = curCol + 1).border = dateBorderRight
+    ws.cell(row = curRow, column = curCol).border = DATE_BORDER_LEFT
+    ws.cell(row = curRow, column = curCol + 1).border = DATE_BORDER_RIGHT
 
     # set date num
     ws.cell(row = curRow + 1, column = curCol).value = dateNum
     mergeDateInfo(ws, curRow + 1, curCol)
-    ws.cell(row = curRow + 1, column = curCol).font = dateFont
+    ws.cell(row = curRow + 1, column = curCol).font = DATE_FONT
     ws.cell(row = curRow + 1, column = curCol).alignment = Alignment(horizontal='center')
-    ws.cell(row = curRow + 1, column = curCol).border = dateBorderLeft
-    ws.cell(row = curRow + 1, column = curCol + 1).border = dateBorderRight
+    ws.cell(row = curRow + 1, column = curCol).border = DATE_BORDER_LEFT
+    ws.cell(row = curRow + 1, column = curCol + 1).border = DATE_BORDER_RIGHT
     
 ####################################################################
 ### Function Title: isHoliday()
@@ -295,20 +295,20 @@ def createCBOCCol(ws):
     ws.column_dimensions[get_column_letter(CBOC_COL)].width = CBOC_COL_WIDTH
     
     # set cboc and date border and font
-    ws.cell(row=2, column=CBOC_COL).font = cbocNameFont
-    ws.cell(row=2, column=CBOC_COL).border = cbocNameBorder
+    ws.cell(row=2, column=CBOC_COL).font = CBOC_NAME_FONT
+    ws.cell(row=2, column=CBOC_COL).border = CBOC_NAME_BORDER
     ws.cell(row=2, column=CBOC_COL).value = "CBOC/CORE"
-    ws.cell(row=3, column=CBOC_COL).border = dateBorder
-    ws.cell(row=3, column=CBOC_COL).font = cbocNameFont
+    ws.cell(row=3, column=CBOC_COL).border = DATE_BORDER
+    ws.cell(row=3, column=CBOC_COL).font = CBOC_NAME_FONT
     ws.cell(row=3, column=CBOC_COL).value = "Date"
-    ws.cell(row=4, column=CBOC_COL).border = bigSpaceBorder
+    ws.cell(row=4, column=CBOC_COL).border = BIG_SPACE_BORDER
 
     # put in border/font for cboc name only rows
     i = 5
     j = 0
     while (i <= 26):
-        ws.cell(row = i, column = CBOC_COL).font = cbocNameFont
-        ws.cell(row = i, column = CBOC_COL).border = cbocNameOnlyBorder
+        ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
+        ws.cell(row = i, column = CBOC_COL).border = CBOC_NAME_ONLY_BORDER
         ws.cell(row = i, column = CBOC_COL).value = NAMES[j]
         i += 3
         j += 1
@@ -316,17 +316,17 @@ def createCBOCCol(ws):
     # put in frozen rows
     i = 6
     while (i <= 27):
-        ws.cell(row = i, column = CBOC_COL).font = cbocNameFont
-        ws.cell(row = i, column = CBOC_COL).border = frozenOnlyBorder
+        ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
+        ws.cell(row = i, column = CBOC_COL).border = FROZEN_ONLY_BORDER
         ws.cell(row = i, column = CBOC_COL).value = FZ
         if(i == 27):
-            ws.cell(row = i, column = CBOC_COL).border = bottomRowBorderCBOCName
+            ws.cell(row = i, column = CBOC_COL).border = BOTTOM_ROW_BORDER_CBOC_NAME
         i += 3
 
     # put in spacer rows
     i = 7
     while (i <= 25):
-        ws.cell(row = i, column = CBOC_COL).border = spacerBorder
+        ws.cell(row = i, column = CBOC_COL).border = SPACER_BORDER
         i += 3
     
 ####################################################################
@@ -414,9 +414,9 @@ def getStartDate():
 ####################################################################
 def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header border formatting
-    headerBorderLeft = Border(top = thick , left = thick, right = None, bottom = thick) 
-    headerBorderRight = Border(top = thick , left = None, right = thick, bottom = thick)  
-    headerBorderMid = Border(top = thick, left = None, right = None, bottom = thick)
+    headerBorderLeft = Border(top = THICK , left = THICK, right = None, bottom = THICK) 
+    headerBorderRight = Border(top = THICK , left = None, right = THICK, bottom = THICK)  
+    headerBorderMid = Border(top = THICK, left = None, right = None, bottom = THICK)
     
     # font values
     headerFont = Font(name = 'Times New Roman', size = 28, bold = True)    
@@ -676,7 +676,7 @@ def main():
         currMonth += 1
         currDate = str(currMonth) + "-01-" + str(currYear)
     
-    print("\nSpreadsheets created, see folder: " + str(currYear) + "_cboc_signin_sheets for your files.")
+    print("\nSpreadsheets created, see folder: \"" + str(currYear) + "_cboc_signin_sheets\" for your files.")
     print("Press \"Enter\" to finish.")
     input()
 
