@@ -367,7 +367,7 @@ def isValidUserInput(userInput):
     i = 0
     while(i < 4):
         if(userInput[i].isdigit() == False):
-                return False
+        	return False
         i += 1
     
     # check that year is between 2021 and 2099
