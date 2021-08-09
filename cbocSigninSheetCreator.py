@@ -350,14 +350,14 @@ def setRowHeights(ws):
         ws.row_dimensions[rowNum].height = SPACER_ROW_HEIGHT
 
 ####################################################################
-### Function Title: validUserInput()
+### Function Title: isValidUserInput()
 ### Arguments: user input (a 4-digit year in string format)
 ### Returns: boolean
 ### Description: checks if the user entered a 4-digit int, and if it's
 ### a year greater than or equal to the current year (2021). returns
 ### true if valid, false otherwise
 ####################################################################
-def validUserInput(userInput):
+def isValidUserInput(userInput):
     # check that length of user input string is correct
     if(len(userInput) != 4):
         return False
@@ -396,7 +396,7 @@ def getStartDate():
     i = 0
     while(i == 0):
         userInputYear = input("\nEnter year in the format yyyy: ")
-        if(validUserInput(userInputYear) == True):
+        if(isValidUserInput(userInputYear) == True):
             i = 1
         else:
             print("Your entry was invalid or a previous year. Enter current year in the format yyyy:")
