@@ -27,14 +27,16 @@ OL = "Oak Lawn"
 FZ = "Frozen"
 TCH = "Tech"
 TOA = "Time of Arrival"
+SMP = "SMP Check"
 MID_DATE = 15
 CBOC_COL_WIDTH = 12.5
-HEADER_ROW_HEIGHT = 45
-CBOC_ROW_HEIGHT = 20
-DATE_ROW_HEIGHT = 22
+HEADER_ROW_HEIGHT = 40
+CBOC_ROW_HEIGHT = 18
+DATE_ROW_HEIGHT = 18
 TECH_TOA_ROW_HEIGHT = 27
-CBOC_NAME_AND_FROZEN_ROW_HEIGHT = 21
-SPACER_ROW_HEIGHT = 10
+CBOC_NAME_AND_FROZEN_ROW_HEIGHT = 18 
+SPACER_ROW_HEIGHT = 6
+SMP_ROW_HEIGHT = 16
 NUM_ROWS = 28
 HEADER_ROW = 1
 HEADER_AND_LABELS_COL = 1
@@ -53,6 +55,7 @@ DOUBLE = Side(border_style = "medium", color = "000000")
 THICK = Side(border_style = "thick", color = "001C54")
 CBOC_NAME_BORDER = Border(top = THICK , left = THICK, right = THICK, bottom = THICK) 
 CBOC_NAME_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
+SMP_CHECK_FONT = Font(name = 'Times New Roman', size = 8, bold = True)
 DATE_BORDER = Border(left = THICK, right = THICK, bottom = THICK)
 BIG_SPACE_BORDER = Border(left = THICK, right = THICK)
 SPACER_BORDER = Border(left = THICK, right = THICK)
@@ -92,7 +95,7 @@ def setWeekendAndHolStyle(ws, curCol, curRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
 
         # place "X's" in the signature/time spaces so they can't be marked in. skip spacer rows
-        if((curRow >= 5) and (curRow not in SPACER_ROWS)):
+        if((curRow >= 5) and ((curRow not in SPACER_ROWS) or (curRow == 25 or curRow == 28))):
             ws.cell(row = curRow, column = curCol).value = "X"
             ws.cell(row = curRow, column = curCol + 1).value = "X"
             ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
@@ -120,7 +123,6 @@ def isWeekend(dayName):
 def createSigBorders(ws, endCol):
     startCol = 2
     startRow = 5
-    endRow = NUM_ROWS
     curCol = startCol
     endCbocNameRow = 26
     endSpacerRow = 25
@@ -137,16 +139,16 @@ def createSigBorders(ws, endCol):
 
         # set frozen name row borders for both cols
         curRow = 6
-        while (curRow <= endRow):
+        while (curRow <= NUM_ROWS):
             # set left col border
             ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
             # set right col border
             ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT
-            if(curRow == endRow):
+            if(curRow+1 == NUM_ROWS):
                 # set left col border bottom to THICK if last row
-                ws.cell(row = curRow, column = curCol).border = Border(right = THIN, bottom = THICK)
+                ws.cell(row = curRow+1, column = curCol).border = Border(right = THIN, bottom = THICK)
                 # set right col border bottom to THICK if last row
-                ws.cell(row = curRow, column = curCol + 1).border = Border(right = THICK, bottom = THICK)
+                ws.cell(row = curRow+1, column = curCol + 1).border = Border(right = THICK, bottom = THICK)
             curRow += 3
 
         # set spacer row borders for both cols
@@ -327,6 +329,15 @@ def createCBOCCol(ws):
     while (i <= 25):
         ws.cell(row = i, column = CBOC_COL).border = SPACER_BORDER
         i += 3
+
+    # put in SMP check
+    ws.cell(row = 25, column=CBOC_COL).font = SMP_CHECK_FONT
+    ws.cell(row = 28, column=CBOC_COL).font = SMP_CHECK_FONT
+    ws.cell(row = 25, column=CBOC_COL).value = SMP
+    ws.cell(row = 28, column=CBOC_COL).value = SMP
+    ws.cell(row = 25, column=CBOC_COL).alignment = Alignment(horizontal='left',vertical='center')
+    ws.cell(row = 28, column=CBOC_COL).alignment = Alignment(horizontal='left',vertical='center')
+
     
 ####################################################################
 ### Function Title: setRowHeights()
@@ -346,7 +357,10 @@ def setRowHeights(ws):
         ws.row_dimensions[rowNum].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT
 
     for rowNum in SPACER_ROWS:
-        ws.row_dimensions[rowNum].height = SPACER_ROW_HEIGHT
+        if(rowNum == 25 or rowNum == 28):
+            ws.row_dimensions[rowNum].height = SMP_ROW_HEIGHT
+        else:
+            ws.row_dimensions[rowNum].height = SPACER_ROW_HEIGHT
 
 ####################################################################
 ### Function Title: isValidUserInput()
