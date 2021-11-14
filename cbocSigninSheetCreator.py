@@ -145,10 +145,17 @@ def createSigBorders(ws, endCol):
         while (curRow <= NUM_ROWS):
             if(curRow == 27):
                 curRow += 1
-            # set left col border
-            ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
-            # set right col border
-            ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT
+            if(curRow != 24 and curRow != 28):
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT
+            else:
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = Border(left = THICK, bottom = THIN, right =THIN)
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = Border(right = THICK, bottom = THIN)
+
             curRow += 3
 
         # set smp row that isn't last row borders
@@ -339,7 +346,10 @@ def createCBOCCol(ws):
         if(i == 27):
             i += 1
         ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
-        ws.cell(row = i, column = CBOC_COL).border = FROZEN_ONLY_BORDER
+        if(i == 28 or i ==24):
+            ws.cell(row = i, column = CBOC_COL).border = Border(left = THICK, right = THICK, bottom = THIN)
+        else:
+            ws.cell(row = i, column = CBOC_COL).border = FROZEN_ONLY_BORDER
         ws.cell(row = i, column = CBOC_COL).value = FZ
         if(i+1 == NUM_ROWS):
             ws.cell(row = i+1, column = CBOC_COL).border = BOTTOM_ROW_BORDER_CBOC_NAME
