@@ -35,7 +35,7 @@ DATE_ROW_HEIGHT = 22
 TECH_TOA_ROW_HEIGHT = 27
 CBOC_NAME_AND_FROZEN_ROW_HEIGHT = 21
 SPACER_ROW_HEIGHT = 10
-NUM_ROWS = 27
+NUM_ROWS = 28
 HEADER_ROW = 1
 HEADER_AND_LABELS_COL = 1
 CBOC_COL = 1
@@ -44,7 +44,7 @@ DATE_ROW = 3
 TECH_TOA_ROW = 4
 CBOC_NAME_AND_FROZEN_ROW_START = 5
 CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
-SPACER_ROWS = [7,10,13,16,19,22,25]
+SPACER_ROWS = [7,10,13,16,19,22,25,28]
 NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
 WEEKEND_AND_HOLIDAY_COL_WIDTH = 2.5
 # set "constant" cell border values
@@ -84,7 +84,6 @@ WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = 
 ####################################################################
 def setWeekendAndHolStyle(ws, curCol, curRow):
     endRow = NUM_ROWS
-    spacerRows = [7,10,13,16,19,22,25]
     # adjust fill color and col width for all rows in the column
     while(curRow <= endRow):
         ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
@@ -93,7 +92,7 @@ def setWeekendAndHolStyle(ws, curCol, curRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
 
         # place "X's" in the signature/time spaces so they can't be marked in. skip spacer rows
-        if((curRow >= 5) and (curRow not in spacerRows)):
+        if((curRow >= 5) and (curRow not in SPACER_ROWS)):
             ws.cell(row = curRow, column = curCol).value = "X"
             ws.cell(row = curRow, column = curCol + 1).value = "X"
             ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
@@ -319,8 +318,8 @@ def createCBOCCol(ws):
         ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
         ws.cell(row = i, column = CBOC_COL).border = FROZEN_ONLY_BORDER
         ws.cell(row = i, column = CBOC_COL).value = FZ
-        if(i == 27):
-            ws.cell(row = i, column = CBOC_COL).border = BOTTOM_ROW_BORDER_CBOC_NAME
+        if(i+1 == NUM_ROWS):
+            ws.cell(row = i+1, column = CBOC_COL).border = BOTTOM_ROW_BORDER_CBOC_NAME
         i += 3
 
     # put in spacer rows
