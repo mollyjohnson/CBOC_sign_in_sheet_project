@@ -36,8 +36,8 @@ DATE_ROW_HEIGHT = 18
 TECH_TOA_ROW_HEIGHT = 27
 CBOC_NAME_AND_FROZEN_ROW_HEIGHT = 18 
 SPACER_ROW_HEIGHT = 6
-SMP_ROW_HEIGHT = 16
-NUM_ROWS = 28
+SMP_ROW_HEIGHT = 18
+NUM_ROWS = 29
 HEADER_ROW = 1
 HEADER_AND_LABELS_COL = 1
 CBOC_COL = 1
@@ -45,8 +45,8 @@ CBOC_ROW = 2
 DATE_ROW = 3
 TECH_TOA_ROW = 4
 CBOC_NAME_AND_FROZEN_ROW_START = 5
-CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
-SPACER_ROWS = [7,10,13,16,19,22,25,28]
+CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,27,28]
+SPACER_ROWS = [7,10,13,16,19,22,25,26,29]
 NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
 WEEKEND_AND_HOLIDAY_COL_WIDTH = 2.5
 # set "constant" cell border values
@@ -55,7 +55,7 @@ DOUBLE = Side(border_style = "medium", color = "000000")
 THICK = Side(border_style = "thick", color = "001C54")
 CBOC_NAME_BORDER = Border(top = THICK , left = THICK, right = THICK, bottom = THICK) 
 CBOC_NAME_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
-SMP_CHECK_FONT = Font(name = 'Times New Roman', size = 8, bold = True)
+SMP_CHECK_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
 DATE_BORDER = Border(left = THICK, right = THICK, bottom = THICK)
 BIG_SPACE_BORDER = Border(left = THICK, right = THICK)
 SPACER_BORDER = Border(left = THICK, right = THICK)
@@ -95,7 +95,7 @@ def setWeekendAndHolStyle(ws, curCol, curRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
 
         # place "X's" in the signature/time spaces so they can't be marked in. skip spacer rows
-        if((curRow >= 5) and ((curRow not in SPACER_ROWS) or (curRow == 25 or curRow == 28))):
+        if((curRow >= 5) and ((curRow not in SPACER_ROWS) or (curRow == 25 or curRow == NUM_ROWS))):
             ws.cell(row = curRow, column = curCol).value = "X"
             ws.cell(row = curRow, column = curCol + 1).value = "X"
             ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
@@ -131,6 +131,9 @@ def createSigBorders(ws, endCol):
         # set cboc name row borders for both cols
         curRow = startRow
         while (curRow <= endCbocNameRow):
+            # if crown point, needs to go one more row down
+            if(curRow == endCbocNameRow):
+                curRow += 1
             # set left col border
             ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_TOP_LEFT
             # set right col border
@@ -140,28 +143,42 @@ def createSigBorders(ws, endCol):
         # set frozen name row borders for both cols
         curRow = 6
         while (curRow <= NUM_ROWS):
+            if(curRow == 27):
+                curRow += 1
             # set left col border
             ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
             # set right col border
             ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT
-            if(curRow+1 == NUM_ROWS):
-                # set left col border bottom to THICK if last row
-                ws.cell(row = curRow+1, column = curCol).border = Border(right = THIN, bottom = THICK)
-                # set right col border bottom to THICK if last row
-                ws.cell(row = curRow+1, column = curCol + 1).border = Border(right = THICK, bottom = THICK)
             curRow += 3
+
+        # set smp row that isn't last row borders
+        curRow = 25
+        ws.cell(row = curRow, column = curCol).border = Border(right = THIN, left = THICK, bottom = DOUBLE)
+        ws.cell(row = curRow, column = curCol + 1).border = Border(right = THICK, left = THIN, bottom = DOUBLE)
 
         # set spacer row borders for both cols
         curRow = 7
         while (curRow <= endSpacerRow):
+            if(curRow == endSpacerRow):
+                curRow += 1
             # set left col border
             ws.cell(row = curRow, column = curCol).border = SPACER_BORDER_LEFT
             # set right col border
             ws.cell(row = curRow, column = curCol + 1).border = SPACER_BORDER_RIGHT
             curRow += 3    
+        
+
+        # set left col border bottom to THICK if last row
+        ws.cell(row = NUM_ROWS, column = curCol).border = Border(right = THIN, bottom = THICK)
+        # set right col border bottom to THICK if last row
+        ws.cell(row = NUM_ROWS, column = curCol + 1).border = Border(right = THICK, bottom = THICK)
 
         # increment cur col by 2 to move onto next date
         curCol += 2
+
+    # set smp row that isn't last row borders 
+    ws.cell(row = 25, column = 1).border = Border(right = THICK, left = THICK, bottom = DOUBLE)
+
 
 ####################################################################
 ### Function Title: mergeDate()
@@ -308,6 +325,8 @@ def createCBOCCol(ws):
     i = 5
     j = 0
     while (i <= 26):
+        if(i == 26):
+            i += 1
         ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
         ws.cell(row = i, column = CBOC_COL).border = CBOC_NAME_ONLY_BORDER
         ws.cell(row = i, column = CBOC_COL).value = NAMES[j]
@@ -317,6 +336,8 @@ def createCBOCCol(ws):
     # put in frozen rows
     i = 6
     while (i <= 27):
+        if(i == 27):
+            i += 1
         ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
         ws.cell(row = i, column = CBOC_COL).border = FROZEN_ONLY_BORDER
         ws.cell(row = i, column = CBOC_COL).value = FZ
@@ -327,16 +348,18 @@ def createCBOCCol(ws):
     # put in spacer rows
     i = 7
     while (i <= 25):
+        if(i == 25):
+            i += 1
         ws.cell(row = i, column = CBOC_COL).border = SPACER_BORDER
         i += 3
 
     # put in SMP check
     ws.cell(row = 25, column=CBOC_COL).font = SMP_CHECK_FONT
-    ws.cell(row = 28, column=CBOC_COL).font = SMP_CHECK_FONT
+    ws.cell(row = 29, column=CBOC_COL).font = SMP_CHECK_FONT
     ws.cell(row = 25, column=CBOC_COL).value = SMP
-    ws.cell(row = 28, column=CBOC_COL).value = SMP
+    ws.cell(row = 29, column=CBOC_COL).value = SMP
     ws.cell(row = 25, column=CBOC_COL).alignment = Alignment(horizontal='left',vertical='center')
-    ws.cell(row = 28, column=CBOC_COL).alignment = Alignment(horizontal='left',vertical='center')
+    ws.cell(row = 29, column=CBOC_COL).alignment = Alignment(horizontal='left',vertical='center')
 
     
 ####################################################################
@@ -357,7 +380,7 @@ def setRowHeights(ws):
         ws.row_dimensions[rowNum].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT
 
     for rowNum in SPACER_ROWS:
-        if(rowNum == 25 or rowNum == 28):
+        if(rowNum == 25 or rowNum == 29):
             ws.row_dimensions[rowNum].height = SMP_ROW_HEIGHT
         else:
             ws.row_dimensions[rowNum].height = SPACER_ROW_HEIGHT
