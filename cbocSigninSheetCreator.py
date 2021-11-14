@@ -27,7 +27,6 @@ OL = "Oak Lawn"
 FZ = "Frozen"
 TCH = "Tech"
 TOA = "Time of Arrival"
-SMP = "SMP Check"
 MID_DATE = 15
 CBOC_COL_WIDTH = 12.5
 HEADER_ROW_HEIGHT = 45
@@ -48,14 +47,12 @@ CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27]
 SPACER_ROWS = [7,10,13,16,19,22,25]
 NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
 WEEKEND_AND_HOLIDAY_COL_WIDTH = 2.5
-
 # set "constant" cell border values
 THIN = Side(border_style = "thin", color = "000000")
 DOUBLE = Side(border_style = "medium", color = "000000")
 THICK = Side(border_style = "thick", color = "001C54")
 CBOC_NAME_BORDER = Border(top = THICK , left = THICK, right = THICK, bottom = THICK) 
 CBOC_NAME_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
-SMP_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
 DATE_BORDER = Border(left = THICK, right = THICK, bottom = THICK)
 BIG_SPACE_BORDER = Border(left = THICK, right = THICK)
 SPACER_BORDER = Border(left = THICK, right = THICK)
