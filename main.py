@@ -250,9 +250,11 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
 ### calculated holiday dates list. if yes returns true otherwise false
 ###################################################################
 def isHoliday(holidayDates, dateNum):
-    if(dateNum in holidayDates):
-        return True
-    return False
+    # if the date is not in the holiday dates list or if the list of
+    # holiday dates is empty, the date isn't a holiday
+    if((holidayDates == None) or (dateNum not in holidayDates)):
+        return False
+    return True
     
 ####################################################################
 ### Function Title: createDateCols()

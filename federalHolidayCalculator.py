@@ -25,9 +25,9 @@ def incrementDate(curDate, dayDate, dayName):
 def january(curDate, endDate, dayName, holidayDates, dayDate):
     mlkMondays = 0
     while(curDate <= endDate):
+        # if new year's occurs on a sat, will be taken care of in dec
+        # if new year's occurs on a sun, push it to mon
         if(curDate == 1):
-            # if new year's occurs on a sat, will be taken care of in dec
-            # if new year's occurs on a sun, push it to mon
             if(dayName == "SUN"):
                 holidayDates.append(curDate + 1)
             elif(dayName != "SAT"):
@@ -153,6 +153,57 @@ def october(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def november(curDate, endDate, dayName, holidayDates, dayDate):
+    thanksgivingThurs = 0
+    while(curDate <= endDate):
+        # veteran's day celebrated 11th of nov
+        if(curDate == 11):
+            # if 11h is a sat, add fri to hols list
+            if(dayName == "SAT"):
+                holidayDates.append(curDate - 1)
+            # if 11th is a sun, add mon to hols list
+            elif(dayName == "SUN"):
+                holidayDates.append(curDate + 1)
+            else:
+                holidayDates.append(curDate)
+        if(dayName == "THU"):
+            thanksgivingThurs += 1
+            # if is 4th thurs of month, that's thanksgiving
+            if(thanksgivingThurs == 4):
+                holidayDates.append(curDate)
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
+    return holidayDates
+
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def december(curDate, endDate, dayName, holidayDates, dayDate):
+    while(curDate <= endDate):
+        # if new year's occurs on a sat, add fri dec 31 to hols
+        if((curDate == 31) and (dayName == "FRI")):
+            holidayDates.append(curDate) 
+        # 25th = christmas
+        if(curDate == 25):
+            # if 25th is on a sat, add fri to hols list
+            if(dayName == "SAT"):
+                holidayDates.append(curDate - 1)
+            # if 25th is on a sun, add mon to hols list
+            elif(dayName == "SUN"):
+                holidayDates.append(curDate + 1)
+            else:
+                holidayDates.append(curDate)
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
+    return holidayDates
+
+####################################################################
 ### Function Title: calcFedHolidays()
 ### Arguments: datetime object
 ### Returns: list of federal holiday dates for a given month
@@ -169,7 +220,6 @@ def calcFedHolidays(dateTimeObj):
     dayDate = dateTimeObj.weekday()
     dayName = calendar.day_abbr[dayDate]
     dayName = dayName.upper()
-    thanksgivingThurs = 0
 
     if(monthName == "JANUARY"):
         return january(curDate, endDate, dayName, holidayDates, dayDate)
@@ -188,34 +238,6 @@ def calcFedHolidays(dateTimeObj):
     elif(monthName == "OCTOBER"):
         return october(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "NOVEMBER"):
-        # veteran's day celebrated 11th of nov
-        if(curDate == 11):
-            # if 11h is a sat, add fri to hols list
-            if(dayName == "SAT"):
-                holidayDates.append(curDate - 1)
-            # if 11th is a sun, add mon to hols list
-            elif(dayName == "SUN"):
-                holidayDates.append(curDate + 1)
-            else:
-                holidayDates.append(curDate)
-        if(dayName == "THU"):
-            thanksgivingThurs += 1
-            # if is 4th thurs of month, that's thanksgiving
-            if(thanksgivingThurs == 4):
-                holidayDates.append(curDate)
+        return november(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "DECEMBER"):
-        # if new year's occurs on a sat, add fri dec 31 to hols
-        if((curDate == 31) and (dayName == "FRI")):
-            holidayDates.append(curDate) 
-        # 25th = christmas
-        if(curDate == 25):
-            # if 25th is on a sat, add fri to hols list
-            if(dayName == "SAT"):
-                holidayDates.append(curDate - 1)
-            # if 25th is on a sun, add mon to hols list
-            elif(dayName == "SUN"):
-                holidayDates.append(curDate + 1)
-            else:
-                holidayDates.append(curDate)
-
-    
+        return december(curDate, endDate, dayName, holidayDates, dayDate)
