@@ -136,6 +136,23 @@ def september(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def october(curDate, endDate, dayName, holidayDates, dayDate):
+    columbusDayMon = 0
+    while(curDate <= endDate):
+        if(dayName == "MON"):
+            columbusDayMon += 1
+            # if is second mon of month, that's columbus day
+            if(columbusDayMon == 2):
+                holidayDates.append(curDate)
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
+    return holidayDates
+
+####################################################################
 ### Function Title: calcFedHolidays()
 ### Arguments: datetime object
 ### Returns: list of federal holiday dates for a given month
@@ -152,7 +169,6 @@ def calcFedHolidays(dateTimeObj):
     dayDate = dateTimeObj.weekday()
     dayName = calendar.day_abbr[dayDate]
     dayName = dayName.upper()
-    columbusDayMon = 0
     thanksgivingThurs = 0
 
     if(monthName == "JANUARY"):
@@ -170,11 +186,7 @@ def calcFedHolidays(dateTimeObj):
     elif(monthName == "SEPTEMBER"):
         return september(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "OCTOBER"):
-        if(dayName == "MON"):
-            columbusDayMon += 1
-            # if is second mon of month, that's columbus day
-            if(columbusDayMon == 2):
-                holidayDates.append(curDate)
+        return october(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "NOVEMBER"):
         # veteran's day celebrated 11th of nov
         if(curDate == 11):
