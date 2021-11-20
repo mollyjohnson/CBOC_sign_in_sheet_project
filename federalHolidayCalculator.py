@@ -1,11 +1,29 @@
 import calendar
 
-#def dayCalculationHelper():
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def incrementDate(curDate, dayDate, dayName):
+    curDate += 1
+    dayDate += 1
+    #if day number is > 6, i.e. you've reached end of week, start week days over
+    if (dayDate > 6):
+        dayDate = 0
+    dayName = calendar.day_abbr[dayDate]
+    dayName = dayName.upper()
+    return curDate, dayDate, dayName
 
-
-def january(curDate, endDate, dayName, holidayDates):
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def january(curDate, endDate, dayName, holidayDates, dayDate):
     mlkMondays = 0
-
     while(curDate <= endDate):
         if(curDate == 1):
             # if new year's occurs on a sat, will be taken care of in dec
@@ -19,55 +37,102 @@ def january(curDate, endDate, dayName, holidayDates):
             # mlk bday falls on 3rd monday of january
             if(mlkMondays == 3):
                 holidayDates.append(curDate)
-        curDate += 1
-        dayDate += 1
-        #if day number is > 6, i.e. you've reached end of week, start week days over
-        if (dayDate > 6):
-            dayDate = 0
-        dayName = calendar.day_abbr[dayDate]
-        dayName = dayName.upper()
-
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
     return holidayDates
 
-def february(curDate, endDate, dayName, holidayDates):
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def february(curDate, endDate, dayName, holidayDates, dayDate):
     washBdayMondays = 0
-
     while(curDate <= endDate):
         if(dayName == "MON"):
             washBdayMondays += 1
             # washington's bday falls on 3rd monday of the month
             if(washBdayMondays == 3):
                 holidayDates.append(curDate)
-        curDate += 1
-        dayDate += 1
-        #if day number is > 6, i.e. you've reached end of week, start week days over
-        if (dayDate > 6):
-            dayDate = 0
-        dayName = calendar.day_abbr[dayDate]
-        dayName = dayName.upper()
-
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
     return holidayDates
 
-def may(curDate, endDate, dayName, holidayDates):
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def may(curDate, endDate, dayName, holidayDates, dayDate):
     # keep replacing last monday in may w the current one,
     # such that the last monday in may will be the last value
     # assigned to the variable (which can then be added later)
     memorialDayLastMonInMayDate = 0
-
     while(curDate <= endDate):
         if(dayName == "MON"):
             memorialDayLastMonInMayDate = curDate
-        curDate += 1
-        dayDate += 1
-        #if day number is > 6, i.e. you've reached end of week, start week days over
-        if (dayDate > 6):
-            dayDate = 0
-        dayName = calendar.day_abbr[dayDate]
-        dayName = dayName.upper() 
-
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
     # if month is may, add last monday for memorial day
     holidayDates.append(memorialDayLastMonInMayDate)
+    return holidayDates
 
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def june(curDate, endDate, dayName, holidayDates, dayDate):
+    # juneteenth holiday
+    while(curDate <= endDate):
+        if(curDate == 19):
+            # if 19th occurs on a sat, add fri to list
+            if(dayName == "SAT"):
+                holidayDates.append(curDate - 1)
+            # if 19th holiday occurs on a sun, add mon to list
+            elif(dayName == "SUN"):
+                holidayDates.append(curDate + 1)
+            else:
+                holidayDates.append(curDate)
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
+    return holidayDates
+
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def july(curDate, endDate, dayName, holidayDates, dayDate):
+    # 4th of july holiday
+    while(curDate <= endDate):
+        if(curDate == 4):
+            # if 4th holiday occurs on a sat, add fri to list.
+            if(dayName == "SAT"):
+                holidayDates.append(curDate - 1)
+            # if 4th holiday occurs on a sun, add mon to list
+            elif(dayName == "SUN"):
+                holidayDates.append(curDate + 1)
+            else:
+                holidayDates.append(curDate)
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
+    return holidayDates
+
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+#################################################################### 
+def september(curDate, endDate, dayName, holidayDates, dayDate):
+    laborDayMon = 0
+    while(curDate <= endDate):
+        if(dayName == "MON"):
+            laborDayMon += 1
+            # if is first mon of the month, that's labor day
+            if(laborDayMon == 1):
+                holidayDates.append(curDate)
+        curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
     return holidayDates
 
 ####################################################################
@@ -87,46 +152,23 @@ def calcFedHolidays(dateTimeObj):
     dayDate = dateTimeObj.weekday()
     dayName = calendar.day_abbr[dayDate]
     dayName = dayName.upper()
-    laborDayMon = 0
     columbusDayMon = 0
     thanksgivingThurs = 0
 
     if(monthName == "JANUARY"):
-        return january(curDate, endDate, dayName, holidayDates)
+        return january(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "FEBRUARY"):
-        return february(curDate, endDate, dayName, holidayDates)
+        return february(curDate, endDate, dayName, holidayDates, dayDate)
     # no fed hols for march or april
     elif(monthName == "MAY"):
-        return may(curDate,endDate,dayName,holidayDates)
+        return may(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "JUNE"):
-        # juneteenth holiday
-        if(curDate == 19):
-            # if 19th occurs on a sat, add fri to list
-            if(dayName == "SAT"):
-                holidayDates.append(curDate - 1)
-            # if 19th holiday occurs on a sun, add mon to list
-            elif(dayName == "SUN"):
-                holidayDates.append(curDate + 1)
-            else:
-                holidayDates.append(curDate)
+        return june(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "JULY"):
-        # 4th of july holiday
-        if(curDate == 4):
-            # if 4th holiday occurs on a sat, add fri to list.
-            if(dayName == "SAT"):
-                holidayDates.append(curDate - 1)
-            # if 4th holiday occurs on a sun, add mon to list
-            elif(dayName == "SUN"):
-                holidayDates.append(curDate + 1)
-            else:
-                holidayDates.append(curDate)
+        return july(curDate, endDate, dayName, holidayDates, dayDate)
     # no fed hols for august
     elif(monthName == "SEPTEMBER"):
-        if(dayName == "MON"):
-            laborDayMon += 1
-            # if is first mon of the month, that's labor day
-            if(laborDayMon == 1):
-                holidayDates.append(curDate)
+        return september(curDate, endDate, dayName, holidayDates, dayDate)
     elif(monthName == "OCTOBER"):
         if(dayName == "MON"):
             columbusDayMon += 1
