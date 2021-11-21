@@ -1,10 +1,13 @@
 import calendar
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: incrementDate()
+### Arguments: current date current day ofthe week (number and name)
+### Returns: the incremented current date, date of the week, and day
+### name ofthe week
+### Description: Increments the date of the month and date of the week,
+### checking for if the end of the week has been reached. Also updates
+### the name of the day of the week. returns these updates values.
 #################################################################### 
 def incrementDate(curDate, dayDate, dayName):
     curDate += 1
@@ -17,10 +20,12 @@ def incrementDate(curDate, dayDate, dayName):
     return curDate, dayDate, dayName
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: january()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of the new year and MLK day
 #################################################################### 
 def january(curDate, endDate, dayName, holidayDates, dayDate):
     mlkMondays = 0
@@ -41,10 +46,12 @@ def january(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title:  february()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of President's day
 #################################################################### 
 def february(curDate, endDate, dayName, holidayDates, dayDate):
     washBdayMondays = 0
@@ -58,10 +65,12 @@ def february(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: may()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of memorial day
 #################################################################### 
 def may(curDate, endDate, dayName, holidayDates, dayDate):
     # keep replacing last monday in may w the current one,
@@ -72,15 +81,17 @@ def may(curDate, endDate, dayName, holidayDates, dayDate):
         if(dayName == "MON"):
             memorialDayLastMonInMayDate = curDate
         curDate, dayDate, dayName = incrementDate(curDate, dayDate, dayName)
-    # if month is may, add last monday for memorial day
+    # add last monday of the month for memorial day
     holidayDates.append(memorialDayLastMonInMayDate)
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: june()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of Juneteenth
 #################################################################### 
 def june(curDate, endDate, dayName, holidayDates, dayDate):
     # juneteenth holiday
@@ -98,10 +109,12 @@ def june(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: july()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of July 4
 #################################################################### 
 def july(curDate, endDate, dayName, holidayDates, dayDate):
     # 4th of july holiday
@@ -119,10 +132,12 @@ def july(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: september()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of labor day
 #################################################################### 
 def september(curDate, endDate, dayName, holidayDates, dayDate):
     laborDayMon = 0
@@ -136,10 +151,12 @@ def september(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: october()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of indigenous peoples'/columbus day
 #################################################################### 
 def october(curDate, endDate, dayName, holidayDates, dayDate):
     columbusDayMon = 0
@@ -153,10 +170,12 @@ def october(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: november()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of veterans' day and thanksgiving
 #################################################################### 
 def november(curDate, endDate, dayName, holidayDates, dayDate):
     thanksgivingThurs = 0
@@ -180,10 +199,13 @@ def november(curDate, endDate, dayName, holidayDates, dayDate):
     return holidayDates
 
 ####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: december()
+### Arguments: current date, end date forthe month, name of the day of
+### the week, holiday dates list, current day date of the week
+### Returns: updated list of holiday dates
+### Description: determines what date should be added to the holiday list
+### for the observance of christmas and new year's (if new year's day
+### falls on a Saturday and would thus be observed Fri Dec 31)
 #################################################################### 
 def december(curDate, endDate, dayName, holidayDates, dayDate):
     while(curDate <= endDate):
