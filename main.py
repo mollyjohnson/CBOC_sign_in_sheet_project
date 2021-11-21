@@ -154,6 +154,7 @@ def createSigBorders(ws, endCol):
                 ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
                 # set right col border
                 ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT
+
             else:
                 # set left col border
                 ws.cell(row = curRow, column = curCol).border = Border(left = THICK, bottom = THIN, right =THIN)
