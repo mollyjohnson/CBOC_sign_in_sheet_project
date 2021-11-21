@@ -6,7 +6,7 @@
 # checking in clinics for every month in one year. Will adjust 
 # for the days of the month, weekends, and federal holidays
 
-# import openpyxl, datetime, and calendar
+# import necessary libraries 
 from openpyxl import Workbook
 from datetime import datetime
 import calendar
@@ -33,6 +33,7 @@ MID_DATE = 15
 START_MONTH = 1
 END_MONTH = 12
 CBOC_COL_WIDTH = 12.5
+WEEKEND_AND_HOLIDAY_COL_WIDTH = 2.5
 HEADER_ROW_HEIGHT = 40
 CBOC_ROW_HEIGHT = 18
 DATE_ROW_HEIGHT = 18
@@ -49,9 +50,10 @@ DATE_ROW = 3
 TECH_TOA_ROW = 4
 CBOC_NAME_AND_FROZEN_ROW_START = 5
 CBOC_NAME_AND_FROZEN_ROWS = [5,6,8,9,11,12,14,15,17,18,20,21,23,24,27,28]
-SPACER_ROWS = [7,10,13,16,19,22,25,26,29]
+SPACER_ROWS = [7,10,13,16,19,22,26]
+SMP_ROWS = [25,29]
 NAMES = [OL,HE,AU,KA,LA,JO,JB,CP] 
-WEEKEND_AND_HOLIDAY_COL_WIDTH = 2.5
+
 # set "constant" cell border values
 THIN = Side(border_style = "thin", color = "000000")
 DOUBLE = Side(border_style = "medium", color = "000000")
@@ -97,7 +99,7 @@ def setWeekendAndHolStyle(ws, curCol, curRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
 
         # place "X's" in the signature/time spaces so they can't be marked in. skip spacer rows
-        if((curRow >= 5) and ((curRow not in SPACER_ROWS) or (curRow == 25 or curRow == NUM_ROWS))):
+        if((curRow >= 5) and (curRow not in SPACER_ROWS)):
             ws.cell(row = curRow, column = curCol).value = "X"
             ws.cell(row = curRow, column = curCol + 1).value = "X"
             ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
@@ -392,10 +394,10 @@ def setRowHeights(ws):
         ws.row_dimensions[rowNum].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT
 
     for rowNum in SPACER_ROWS:
-        if(rowNum == 25 or rowNum == 29):
-            ws.row_dimensions[rowNum].height = SMP_ROW_HEIGHT
-        else:
-            ws.row_dimensions[rowNum].height = SPACER_ROW_HEIGHT
+        ws.row_dimensions[rowNum].height = SPACER_ROW_HEIGHT
+
+    for rowNum in SMP_ROWS:
+        ws.row_dimensions[rowNum].height = SMP_ROW_HEIGHT
 
 ####################################################################
 ### Function Title: isValidUserInput()
@@ -490,33 +492,14 @@ def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     ws.cell(row = startRow, column = startCol).value = data
 
 ####################################################################
-### Function Title: getDateTimeObj()
-### Arguments: start date (format mm-dd-yyyy)
-### Returns: datetime object
-### Description: returns the datetime object created using strptime
-### from the date provided in mm-dd-yyyy format
-####################################################################   
-def getDatetimeObj(startDate):
-    dateTimeObj = datetime.strptime(startDate, "%m-%d-%Y")
-    #print start date string
-    #print(startDate)
-    #get day number from date
-    #print('Day of Month: ', dateTimeObj.day)
-    #get year from date
-    #print('Year: ', dateTimeObj.year)
-    #to get name of day (in number) from date
-    #print('Datetime day of Week (number): ', dateTimeObj.weekday())
-    # to get name of day from date
-    #print('Datetime day of Week (name): ', calendar.day_abbr[dateTimeObj.weekday()])
-    # to get name of month from date
-    #print('Month name: ', calendar.month_name[dateTimeObj.month])
-    return dateTimeObj
-
-####################################################################
-### Function Title: 
-### Arguments: 
-### Returns: 
-### Description: 
+### Function Title: saveExcelFile()
+### Arguments: current month, current year, the workbook, the date
+### time object
+### Returns: none 
+### Description: creates new folder if none exists. changes to that
+### directory either way. saves the current workbook to an excel file.
+###if the month is a single digit (1 - 9), will add a 0 in front of
+### it so the files alphebatize in the correct order in the folder.
 ####################################################################
 def saveExcelFile(currMonth, currYear, wb, dateTimeObj):
     # if is jan, create folder for all the sheets. otherwise you're already in the folder
@@ -526,7 +509,7 @@ def saveExcelFile(currMonth, currYear, wb, dateTimeObj):
             os.mkdir(str(currYear) + CBOC)
         os.chdir(str(currYear) + CBOC)
 
-    # save workbook to excel file and exit
+    # save workbook to excel file
     if(currMonth < 10):
         strMonth = "0" + str(currMonth)
     else:
@@ -562,7 +545,7 @@ def main():
         ws2 = wb.create_sheet("16-End", 1)
         
         # Create date object in format mm-dd-yyyy from start date string
-        dateTimeObj = getDatetimeObj(currDate)
+        dateTimeObj = datetime.strptime(currDate, "%m-%d-%Y")
         
         # get end date for the month
         endDate = calendar.monthrange(dateTimeObj.year, dateTimeObj.month)[1]
@@ -601,6 +584,7 @@ def main():
         currMonth += 1
         currDate = str(currMonth) + "-01-" + str(currYear)
     
+    # tell user what folder their files are in. wait for their input (enter) before exiting.
     print("\nSpreadsheets created, see folder: \"" + str(currYear) + "_cboc_signin_sheets\" for your files.")
     print("Press \"Enter\" to finish.")
     input()
