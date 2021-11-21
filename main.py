@@ -7,11 +7,10 @@
 # for the days of the month, weekends, and federal holidays
 
 # import openpyxl, datetime, and calendar
-import openpyxl
 from openpyxl import Workbook
 from datetime import datetime
 import calendar
-from openpyxl.styles import PatternFill, Border, Side, Alignment, Protection, Font
+from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
 from openpyxl.utils import get_column_letter
 import os
 import federalHolidayCalculator
