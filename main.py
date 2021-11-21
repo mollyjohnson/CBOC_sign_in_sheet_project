@@ -31,6 +31,8 @@ TOA = "Time of Arrival"
 SMP = "SMP Check"
 CBOC = "_cboc_signin_sheets"
 MID_DATE = 15
+START_MONTH = 1
+END_MONTH = 12
 CBOC_COL_WIDTH = 12.5
 HEADER_ROW_HEIGHT = 40
 CBOC_ROW_HEIGHT = 18
@@ -482,7 +484,8 @@ def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
             cell.border = headerBorderMid 
             
     # create header and merge cells A1 through AE1
-    ws.cell(row = startRow, column = startCol).value =  ("Month/Year: " + (str(calendar.month_name[startDateObj.month]) + " " + str(startDateObj.year)).upper())
+    ws.cell(row = startRow, column = startCol).value = ("Month/Year: " + (str(calendar.month_name[startDateObj.month]) +
+        " " + str(startDateObj.year)).upper())
     data = ws.cell(row = startRow, column = startCol).value
     ws.merge_cells(start_row = startRow, start_column = startCol, end_row = endRow, end_column = endCol)
     ws.cell(row = startRow, column = startCol).value = data
@@ -546,13 +549,11 @@ def saveExcelFile(currMonth, currYear, wb, dateTimeObj):
 ### order in the folder (jan - dec for the given year).
 ####################################################################
 def main():
-    currMonth = 1
-    endMonth = 12
-
+    currMonth = START_MONTH
     currDate, currYear = getStartDate()
     print("...excel spreadsheet creation in progress please wait...")
     
-    while (currMonth <= endMonth):
+    while (currMonth <= END_MONTH):
         # create workbook (1st sheet at pos 0 created automatically)
         wb = Workbook()
         ws1 = wb.active
