@@ -29,6 +29,8 @@ TCH = "Tech"
 TOA = "Time of Arrival"
 SMP = "SMP Check"
 CBOC = "_cboc_signin_sheets"
+USER_INPUT_LENGTH = 4
+MIN_YEAR = 2021
 MID_DATE = 15
 START_MONTH = 1
 END_MONTH = 12
@@ -59,8 +61,7 @@ THIN = Side(border_style = "thin", color = "000000")
 DOUBLE = Side(border_style = "medium", color = "000000")
 THICK = Side(border_style = "thick", color = "001C54")
 CBOC_NAME_BORDER = Border(top = THICK , left = THICK, right = THICK, bottom = THICK) 
-CBOC_NAME_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
-SMP_CHECK_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
+TIMES_NEW_ROMAN_FONT = Font(name = 'Times New Roman', size = 10, bold = True)
 DATE_BORDER = Border(left = THICK, right = THICK, bottom = THICK)
 BIG_SPACE_BORDER = Border(left = THICK, right = THICK)
 SPACER_BORDER = Border(left = THICK, right = THICK)
@@ -286,8 +287,6 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
         setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow)
         #set tech info (tech, arrival time)
         setTechInfo(ws, curCol, curRow)
-
-        
         
         # increment to get to second part of each date column
         curCol += 1
@@ -324,11 +323,11 @@ def createCBOCCol(ws):
     ws.column_dimensions[get_column_letter(CBOC_COL)].width = CBOC_COL_WIDTH
     
     # set cboc and date border and font
-    ws.cell(row=2, column=CBOC_COL).font = CBOC_NAME_FONT
+    ws.cell(row=2, column=CBOC_COL).font = TIMES_NEW_ROMAN_FONT
     ws.cell(row=2, column=CBOC_COL).border = CBOC_NAME_BORDER
     ws.cell(row=2, column=CBOC_COL).value = "CBOC/CORE"
     ws.cell(row=3, column=CBOC_COL).border = DATE_BORDER
-    ws.cell(row=3, column=CBOC_COL).font = CBOC_NAME_FONT
+    ws.cell(row=3, column=CBOC_COL).font = TIMES_NEW_ROMAN_FONT
     ws.cell(row=3, column=CBOC_COL).value = "Date"
     ws.cell(row=4, column=CBOC_COL).border = BIG_SPACE_BORDER
 
@@ -338,7 +337,7 @@ def createCBOCCol(ws):
     while (i <= 26):
         if(i == 26):
             i += 1
-        ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
+        ws.cell(row = i, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
         ws.cell(row = i, column = CBOC_COL).border = CBOC_NAME_ONLY_BORDER
         ws.cell(row = i, column = CBOC_COL).value = NAMES[j]
         i += 3
@@ -349,7 +348,7 @@ def createCBOCCol(ws):
     while (i <= 27):
         if(i == 27):
             i += 1
-        ws.cell(row = i, column = CBOC_COL).font = CBOC_NAME_FONT
+        ws.cell(row = i, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
         if(i == 28 or i ==24):
             ws.cell(row = i, column = CBOC_COL).border = Border(left = THICK, right = THICK, bottom = THIN)
         else:
@@ -368,8 +367,8 @@ def createCBOCCol(ws):
         i += 3
 
     # put in SMP check
-    ws.cell(row = 25, column=CBOC_COL).font = SMP_CHECK_FONT
-    ws.cell(row = 29, column=CBOC_COL).font = SMP_CHECK_FONT
+    ws.cell(row = 25, column=CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+    ws.cell(row = 29, column=CBOC_COL).font = TIMES_NEW_ROMAN_FONT
     ws.cell(row = 25, column=CBOC_COL).value = SMP
     ws.cell(row = 29, column=CBOC_COL).value = SMP
     ws.cell(row = 25, column=CBOC_COL).alignment = Alignment(horizontal='left',vertical='center')
@@ -409,21 +408,17 @@ def setRowHeights(ws):
 ####################################################################
 def isValidUserInput(userInput):
     # check that length of user input string is correct
-    if(len(userInput) != 4):
+    if(len(userInput) != USER_INPUT_LENGTH):
         return False
-    
-    # check that first two chars are digits, mid char
     # is / or -, and last 2 chars are digits.
     i = 0
-    while(i < 4):
+    while(i < USER_INPUT_LENGTH):
         if(userInput[i].isdigit() == False):
         	return False
         i += 1
-    
-    # check that year is between 2021 and 2099
-    if (int(userInput) < 2021):
+    # check that year is no earlier than 2021 (year this program written)
+    if (int(userInput) < MIN_YEAR):
         return False
-    
     # otherwise met all requirements, return true
     return True
 
@@ -443,11 +438,10 @@ def isValidUserInput(userInput):
 ####################################################################
 def getStartDate():
     # get start date of the month from user
-    i = 0
-    while(i == 0):
+    while(True):
         userInputYear = input("\nEnter year in the format yyyy: ")
-        if(isValidUserInput(userInputYear) == True):
-            i = 1
+        if(isValidUserInput(userInputYear)):
+            break
         else:
             print("Your entry was invalid or a previous year. Enter current year in the format yyyy:")
 
