@@ -29,6 +29,7 @@ FZ = "Frozen"
 TCH = "Tech"
 TOA = "Time of Arrival"
 SMP = "SMP Check"
+CBOC = "_cboc_signin_sheets"
 MID_DATE = 15
 CBOC_COL_WIDTH = 12.5
 HEADER_ROW_HEIGHT = 40
@@ -87,9 +88,8 @@ WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = 
 ### since no CBOC's are received on weekends or federal holidays
 ####################################################################
 def setWeekendAndHolStyle(ws, curCol, curRow):
-    endRow = NUM_ROWS
     # adjust fill color and col width for all rows in the column
-    while(curRow <= endRow):
+    while(curRow <= NUM_ROWS):
         ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
         ws.cell(row = curRow, column = curCol + 1).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
         ws.column_dimensions[get_column_letter(curCol)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
@@ -122,9 +122,8 @@ def isWeekend(dayName):
 ### Description: adjusts the borders for all of the signature cells
 ####################################################################
 def createSigBorders(ws, endCol):
-    startCol = 2
     startRow = 5
-    curCol = startCol
+    curCol = 2
     endCbocNameRow = 26
     endSpacerRow = 25
 
@@ -264,7 +263,7 @@ def isHoliday(holidayDates, dateNum):
 ### Description: creates/sets the width/borders/font/alignment for each cell
 ### in each date column. adjusts for if that date is a federal holiday or weekend
 ###################################################################
-def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate, holidayDates):
+def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
     #to get name of day (in number) from date
     # to get name of day from date
     dateNum = startDate
@@ -308,7 +307,6 @@ def createDateCols(ws, endCol, dateTimeObj, startDate, dayDate, holidayDates):
 
     return dayDate
         
-
 ####################################################################
 ### Function Title: createCBOCCOL()
 ### Arguments: worksheet
@@ -511,7 +509,28 @@ def getDatetimeObj(startDate):
     # to get name of month from date
     #print('Month name: ', calendar.month_name[dateTimeObj.month])
     return dateTimeObj
-    
+
+####################################################################
+### Function Title: 
+### Arguments: 
+### Returns: 
+### Description: 
+####################################################################
+def saveExcelFile(currMonth, currYear, wb, dateTimeObj):
+    # if is jan, create folder for all the sheets. otherwise you're already in the folder
+    if(currMonth == 1):
+        # if directory doesn't exist already, create it. then change to that directory from base directory either way
+        if(os.path.isdir(str(currYear) + CBOC) == False):
+            os.mkdir(str(currYear) + CBOC)
+        os.chdir(str(currYear) + CBOC)
+
+    # save workbook to excel file and exit
+    if(currMonth < 10):
+        strMonth = "0" + str(currMonth)
+    else:
+        strMonth = str(currMonth)
+    wb.save(strMonth + calendar.month_name[dateTimeObj.month] + "_" + str(dateTimeObj.year) + CBOC + '.xlsx')  
+
 ####################################################################
 ### Function Title: main()
 ### Arguments: none
@@ -563,8 +582,8 @@ def main():
         # create rest of cols (date cols) for both sheets
         dayDate = dateTimeObj.weekday()
         # (update day date to be last day date from first sheet before passing to second sheet)
-        dayDate = createDateCols(ws1, MID_DATE, dateTimeObj, 1, dayDate, holidayDates)
-        createDateCols(ws2, endDate - MID_DATE, dateTimeObj, 16, dayDate, holidayDates)
+        dayDate = createDateCols(ws1, MID_DATE, 1, dayDate, holidayDates)
+        createDateCols(ws2, endDate - MID_DATE, MID_DATE + 1, dayDate, holidayDates)
     
         # create rest of borders for blank areas that will get signatures/initials and times
         createSigBorders(ws1, MID_DATE * 2)
@@ -575,20 +594,9 @@ def main():
         createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
         createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
         
-        # if is jan, create folder for all the sheets. otherwise you're already in the folder
-        if(currMonth == 1):
-            # if directory doesn't exist already, create it. then change to that directory from base directory either way
-            if(os.path.isdir(str(currYear) + "_cboc_signin_sheets") == False):
-                os.mkdir(str(currYear) + "_cboc_signin_sheets")
-            os.chdir(str(currYear) + "_cboc_signin_sheets")
-
-        # save workbook to excel file and exit
-        if(currMonth < 10):
-            strMonth = "0" + str(currMonth)
-        else:
-            strMonth = str(currMonth)
-        wb.save(strMonth + calendar.month_name[dateTimeObj.month] + "_" + str(dateTimeObj.year) + '_cboc_signin_sheet.xlsx')  
-
+        # save the current month's excel file
+        saveExcelFile(currMonth, currYear, wb, dateTimeObj)
+        
         #increment the month
         currMonth += 1
         currDate = str(currMonth) + "-01-" + str(currYear)
