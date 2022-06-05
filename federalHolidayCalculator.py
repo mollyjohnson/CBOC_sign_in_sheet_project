@@ -1,3 +1,7 @@
+# Author: Molly Johnson
+# Date:
+# Description:
+
 import calendar
 
 ####################################################################
