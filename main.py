@@ -27,4 +27,19 @@ import readFile
 
 # create "constants"
 
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+# create lists for both SMP and non SMP CBOC names
+smpCBOCs = []
+noSMPCBOCs = []
+
 # get CBOCs from file
+smpCBOCs, noSMPCBOCs = readFile.getCBOClists(smpCBOCs, noSMPCBOCs)
+print ('SMP CBOCs:')
+print(smpCBOCs)
+print('no SMP CBOCs:')
+print(noSMPCBOCs)

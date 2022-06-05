@@ -13,7 +13,10 @@ TRAILER = ', SMP'
 ### Description: 
 ###################################################################
 # Check whether the CBOC needs an SMP check line or not
-
+def isSMPCBOC(line):
+    if(TRAILER in line):
+        return True
+    return False
 
 ####################################################################
 ### Function Title:
@@ -21,23 +24,29 @@ TRAILER = ', SMP'
 ### Returns:
 ### Description: 
 ###################################################################
-# open CBOC.txt file
-file = open(CBOC,'r')
+def getCBOClists(smpCBOCs, noSMPCBOCs):
+    # open CBOC.txt file
+    file = open(CBOC,'r')
 
-# use readlines to read all lines in the text file and
-# return the file contents as a list of strings
-lines = []
-lines = file.readlines()
+    # use readlines to read all lines in the text file and
+    # return the file contents as a list of strings
+    lines = file.readlines()
 
-# count num CBOCs from the file
-numCBOCs = 0
+    # go through each line and strip the added newline character and increment number of CBOCs
+    for line in lines:
+        # strip the added newline character readlines() adds
+        line = line.rstrip('\n')
 
-# go through each line and strip the added newline character and increment number of CBOCs
-for line in lines:
-    print(line.rstrip('\n'))
-    numCBOCs += 1
+        # check if CBOC needs an smp line. if so remove trailer indicating is an SMP
+        # clinic from the string before adding to list
+        if(isSMPCBOC(line) == True):
+            smpCBOCs.append(line.rstrip(TRAILER))
+        # if CBOC does not need an smp line, add it to other list as is
+        else:
+            noSMPCBOCs.append(line)
 
-print('\n' + str(numCBOCs))
+    # close .txt file
+    file.close()
 
-# close .txt file
-file.close()
+    # return list of SMP CBOCs and non SMP cbocs
+    return smpCBOCs, noSMPCBOCs
