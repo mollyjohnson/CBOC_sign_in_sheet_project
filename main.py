@@ -105,6 +105,135 @@ def isValidUserInput(userInput):
     return True
 
 ####################################################################
+### Function Title: mergeDate()
+### Arguments: worksheet, start row, start column
+### Returns: nothing
+### Description: merges two date info cells
+####################################################################
+def mergeDateInfo(ws, startRow, startCol):
+    data = ws.cell(row = startRow, column = startCol).value
+    ws.merge_cells(start_row = startRow, start_column = startCol, end_row = startRow, end_column = startCol + 1)
+    ws.cell(row = startRow, column = startCol).value = data
+
+####################################################################
+### Function Title: isHoliday()
+### Arguments: holiday dates list, date num (date of the month)
+### Returns: boolean
+### Description: checks if a specific date is in the previously
+### calculated holiday dates list. if yes returns true otherwise false
+###################################################################
+def isHoliday(holidayDates, dateNum):
+    # if the date is not in the holiday dates list or if the list of
+    # holiday dates is empty, the date isn't a holiday
+    if((holidayDates == None) or (dateNum not in holidayDates)):
+        return False
+    return True
+
+####################################################################
+### Function Title: isWeekend()
+### Arguments: day name
+### Returns: boolean
+### Description: checks if the day name passed in is a weekend day
+### name. if yes returns true, otherwise returns false
+####################################################################
+def isWeekend(dayName):
+    if(dayName == "SAT" or dayName == "SUN"):
+        return True
+    return False
+
+####################################################################
+### Function Title: setTechInfo()
+### Arguments: worksheet, current column, current row
+### Returns: nothing
+### Description: adjusts the font/border for the tech and time of
+### arrival cells
+####################################################################
+def setTechInfo(ws, curCol, curRow):
+    ws.cell(row = curRow + 2, column = curCol).value = TCH
+    ws.cell(row = curRow + 2, column = curCol).font = TECH_FONT
+    ws.cell(row = curRow + 2, column = curCol).border = TECH_INFO_BORDER_LEFT
+    
+
+    ws.cell(row = curRow + 2, column = curCol + 1).value = TOA
+    ws.cell(row = curRow + 2, column = curCol + 1).font = TOA_FONT
+    ws.cell(row = curRow + 2, column = curCol + 1).border = TECH_INFO_BORDER_RIGHT
+    ws.cell(row = curRow + 2, column = curCol + 1).alignment = Alignment(wrap_text=True)
+
+####################################################################
+### Function Title: setDateInfo()
+### Arguments: worksheet, current column, the day of the week number (dayDate),
+### the day of the week name, the date number (i.e. date of the month), current row
+### Returns: nothing
+### Description: sets the font/alignment/border for the day name and date of month
+####################################################################
+def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
+    # set day name
+    ws.cell(row = curRow, column = curCol).value = dayName
+    mergeDateInfo(ws, curRow, curCol)
+    ws.cell(row = curRow, column = curCol).font = DATE_FONT
+    ws.cell(row = curRow, column = curCol).alignment = Alignment(horizontal='center')
+    ws.cell(row = curRow, column = curCol).border = DATE_BORDER_LEFT
+    ws.cell(row = curRow, column = curCol + 1).border = DATE_BORDER_RIGHT
+
+    # set date num
+    ws.cell(row = curRow + 1, column = curCol).value = dateNum
+    mergeDateInfo(ws, curRow + 1, curCol)
+    ws.cell(row = curRow + 1, column = curCol).font = DATE_FONT
+    ws.cell(row = curRow + 1, column = curCol).alignment = Alignment(horizontal='center')
+    ws.cell(row = curRow + 1, column = curCol).border = DATE_BORDER_LEFT
+    ws.cell(row = curRow + 1, column = curCol + 1).border = DATE_BORDER_RIGHT
+
+####################################################################
+### Function Title: createDateCols()
+### Arguments: worksheet, end column, date time object, start date,
+### day date (date in the week number), holiday dates list
+### Returns: the day date (day in the week number) so can be used for second sheet
+### Description: creates/sets the width/borders/font/alignment for each cell
+### in each date column. adjusts for if that date is a federal holiday or weekend
+###################################################################
+def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
+    #to get name of day (in number) from date
+    # to get name of day from date
+    dateNum = startDate
+    dayName = calendar.day_abbr[dayDate]
+    dayName = dayName.upper()
+
+    # make start col and row 2 since dates start after CBOC col and header row
+    curRow = 2
+    curCol = 2
+    #regColWidth = 3.67
+    regColWidth = 4.5 
+    while (curCol <= (endCol * 2)):
+        
+        ws.column_dimensions[get_column_letter(curCol)].width = regColWidth 
+
+        # set the day date and name for the date/name cells
+        setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow)
+        #set tech info (tech, arrival time)
+        setTechInfo(ws, curCol, curRow)
+        
+        # increment to get to second part of each date column
+        curCol += 1
+        ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
+
+        # check if is weekend or holiday
+        #if((isWeekend(dayName) == True) or (isHoliday(holidayDates, dateNum) == True)):
+            #setWeekendAndHolStyle(ws, curCol - 1, curRow)
+
+        # increment to get to first column of new date
+        curCol += 1
+        # increment the day and date
+        dayDate += 1
+        dateNum += 1
+        #if day number is > 6, i.e. you've reached end of week, start week days over
+        if (dayDate > 6):
+            dayDate = 0
+        dayName = calendar.day_abbr[dayDate]
+        dayName = dayName.upper()
+
+    return dayDate
+
+####################################################################
 ### Function Title: getStartDate()
 ### Arguments: none
 ### Returns: start date (in format mm-dd-yyyy) and the year input by
@@ -129,7 +258,31 @@ def getStartDate():
 
     # reformat start date input into string for datetime in format 01-01-20yy
     startDate = "01-01-" + userInputYear
-    return startDate, userInputYear####################################################################
+    return startDate, userInputYear
+
+####################################################################
+### Function Title: createCBOCCOL()
+### Arguments: worksheet
+### Returns: nothing
+### Description: creates the column/font/border for the cboc column
+### (which has all cboc names and a row for frozens from each)
+###################################################################
+def createCBOCCol(ws):
+    # create cboc col border and font
+    
+    # set cboc col width
+    ws.column_dimensions[get_column_letter(CBOC_COL)].width = CBOC_COL_WIDTH
+    
+    # set cboc and date border and font
+    ws.cell(row=2, column=CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+    ws.cell(row=2, column=CBOC_COL).border = CBOC_NAME_BORDER
+    ws.cell(row=2, column=CBOC_COL).value = "CBOC/CORE"
+    ws.cell(row=3, column=CBOC_COL).border = DATE_BORDER
+    ws.cell(row=3, column=CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+    ws.cell(row=3, column=CBOC_COL).value = "Date"
+    ws.cell(row=4, column=CBOC_COL).border = BIG_SPACE_BORDER
+
+####################################################################
 ### Function Title: saveExcelFile()
 ### Arguments: current month, current year, the workbook, the date
 ### time object
@@ -200,9 +353,9 @@ def main():
         holidayDates = []
         holidayDates = federalHolidayCalculator.calcFedHolidays(dateTimeObj) 
 
-
         #####################
-
+        createCBOCCol(ws1)
+        createCBOCCol(ws2)
         #####################
         # save the current month's excel file
         saveExcelFile(currMonth, currYear, wb, dateTimeObj)
