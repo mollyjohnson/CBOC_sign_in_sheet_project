@@ -80,6 +80,35 @@ SPACER_BORDER_LEFT = Border(right = THIN, left = THICK)
 SPACER_BORDER_RIGHT = Border(right = THICK, left = THIN)
 WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = "BFBFBF", end_color = "BFBFBF")
 
+def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
+    # create header border formatting
+    headerBorderLeft = Border(top = THICK , left = THICK, right = None, bottom = THICK) 
+    headerBorderRight = Border(top = THICK , left = None, right = THICK, bottom = THICK)  
+    headerBorderMid = Border(top = THICK, left = None, right = None, bottom = THICK)
+    
+    # font values
+    headerFont = Font(name = 'Times New Roman', size = 28, bold = True)    
+    
+    ws.cell(row = startRow, column = startCol).alignment = Alignment(vertical = 'bottom')
+    ws.cell(row = startRow, column = startCol).alignment = Alignment(horizontal = 'center')
+    ws.cell(row = startRow, column = startCol).font = headerFont
+    
+    # set border at far left and far right of header merged cells
+    ws.cell(row = startRow, column = startCol).border = headerBorderLeft
+    ws.cell(row = endRow, column = endCol).border = headerBorderRight
+    
+    # set border at middle header merged cells
+    for row in ws.iter_rows(min_row = startRow, max_row = endRow, min_col = (startCol + 1), max_col = (endCol - 1)):
+        for cell in row:
+            cell.border = headerBorderMid 
+            
+    # create header and merge cells A1 through AE1
+    ws.cell(row = startRow, column = startCol).value = ("Month/Year: " + (str(calendar.month_name[startDateObj.month]) +
+        " " + str(startDateObj.year)).upper())
+    data = ws.cell(row = startRow, column = startCol).value
+    ws.merge_cells(start_row = startRow, start_column = startCol, end_row = endRow, end_column = endCol)
+    ws.cell(row = startRow, column = startCol).value = data
+
 ####################################################################
 ### Function Title: isValidUserInput()
 ### Arguments: user input (a 4-digit year in string format)
@@ -96,7 +125,7 @@ def isValidUserInput(userInput):
     i = 0
     while(i < USER_INPUT_LENGTH):
         if(userInput[i].isdigit() == False):
-        	return False
+            return False
         i += 1
     # check that year is no earlier than 2021 (year this program written)
     if (int(userInput) < MIN_YEAR):
@@ -218,7 +247,7 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
 
         # check if is weekend or holiday
         #if((isWeekend(dayName) == True) or (isHoliday(holidayDates, dateNum) == True)):
-            #setWeekendAndHolStyle(ws, curCol - 1, curRow)
+        #    setWeekendAndHolStyle(ws, curCol - 1, curRow)
 
         # increment to get to first column of new date
         curCol += 1
@@ -309,6 +338,18 @@ def saveExcelFile(currMonth, currYear, wb, dateTimeObj):
     wb.save(strMonth + calendar.month_name[dateTimeObj.month] + "_" + str(dateTimeObj.year) + CBOC + '.xlsx')  
 
 ####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+def setFixedRowHeights(ws):
+    ws.row_dimensions[HEADER_ROW].height = HEADER_ROW_HEIGHT
+    ws.row_dimensions[CBOC_ROW].height = CBOC_ROW_HEIGHT 
+    ws.row_dimensions[DATE_ROW].height = DATE_ROW_HEIGHT
+    ws.row_dimensions[TECH_TOA_ROW].height = TECH_TOA_ROW_HEIGHT
+
+####################################################################
 ### Function Title: main()
 ### Arguments: none
 ### Returns: none
@@ -356,7 +397,17 @@ def main():
         #####################
         createCBOCCol(ws1)
         createCBOCCol(ws2)
+
+        # create header for both sheets
+        createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
+        createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
+
+        # set row heights for fixed portions of sheet
+        setFixedRowHeights(ws1)
+        setFixedRowHeights(ws2)
+
         #####################
+
         # save the current month's excel file
         saveExcelFile(currMonth, currYear, wb, dateTimeObj)
         
@@ -371,3 +422,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
