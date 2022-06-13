@@ -52,6 +52,7 @@ CBOC_ROW = 2
 DATE_ROW = 3
 TECH_TOA_ROW = 4
 CBOC_NAME_AND_FROZEN_ROW_START = 5
+NUM_FIXED_ROWS =4
 
 # set "constant" cell border values
 THIN = Side(border_style = "thin", color = "000000")
@@ -213,6 +214,23 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
     ws.cell(row = curRow + 1, column = curCol + 1).border = DATE_BORDER_RIGHT
 
 ####################################################################
+### Function Title: setWeekendStyle()
+### Arguments: worksheet, the current col, the current row
+### Returns: nothing
+### Description: adjusts the width of the columns to narrower, grays out
+### all cells in the column, and places x's in the signature/time areas,
+### since no CBOC's are received on weekends or federal holidays
+####################################################################
+def setFixedWeekendAndHolStyle(ws, curCol, curRow):
+    # adjust fill color and col width for all rows in the column
+    while(curRow <= NUM_FIXED_ROWS):
+        ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        ws.cell(row = curRow, column = curCol + 1).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        ws.column_dimensions[get_column_letter(curCol)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
+        ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
+        curRow += 1
+
+####################################################################
 ### Function Title: createDateCols()
 ### Arguments: worksheet, end column, date time object, start date,
 ### day date (date in the week number), holiday dates list
@@ -246,8 +264,8 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
 
         # check if is weekend or holiday
-        #if((isWeekend(dayName) == True) or (isHoliday(holidayDates, dateNum) == True)):
-        #    setWeekendAndHolStyle(ws, curCol - 1, curRow)
+        if((isWeekend(dayName) == True) or (isHoliday(holidayDates, dateNum) == True)):
+            setFixedWeekendAndHolStyle(ws, curCol - 1, curRow)
 
         # increment to get to first column of new date
         curCol += 1
@@ -395,16 +413,25 @@ def main():
         holidayDates = federalHolidayCalculator.calcFedHolidays(dateTimeObj) 
 
         #####################
-        createCBOCCol(ws1)
-        createCBOCCol(ws2)
-
-        # create header for both sheets
-        createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
-        createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
 
         # set row heights for fixed portions of sheet
         setFixedRowHeights(ws1)
         setFixedRowHeights(ws2)
+
+        # create cboc cell font/border/values for both sheets
+        createCBOCCol(ws1)
+        createCBOCCol(ws2)
+
+        # create rest of cols (date cols) for both sheets
+        dayDate = dateTimeObj.weekday()
+
+        # update day date to be last day date from first sheet before passing to second sheet
+        dayDate = createDateCols(ws1, MID_DATE, 1, dayDate, holidayDates)
+        createDateCols(ws2, endDate - MID_DATE, MID_DATE + 1, dayDate, holidayDates)
+
+        # create header for both sheets
+        createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
+        createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
 
         #####################
 
