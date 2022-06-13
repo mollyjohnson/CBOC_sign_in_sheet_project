@@ -22,7 +22,6 @@ from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
 from openpyxl.utils import get_column_letter
 import os
 import federalHolidayCalculator
-import CBOC
 import readFile
 
 # create "constants"
@@ -51,7 +50,7 @@ CBOC_COL = 1
 CBOC_ROW = 2
 DATE_ROW = 3
 TECH_TOA_ROW = 4
-CBOC_NAME_AND_FROZEN_ROW_START = 5
+CBOC_NAME_START_ROW = 5
 NUM_FIXED_ROWS =4
 
 # set "constant" cell border values
@@ -367,6 +366,15 @@ def setFixedRowHeights(ws):
     ws.row_dimensions[DATE_ROW].height = DATE_ROW_HEIGHT
     ws.row_dimensions[TECH_TOA_ROW].height = TECH_TOA_ROW_HEIGHT
 
+
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+
+
 ####################################################################
 ### Function Title: main()
 ### Arguments: none
@@ -433,6 +441,21 @@ def main():
         createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
         createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
 
+        # put in non-smp CBOC rows
+
+
+        # put in frozen rows
+
+
+        # put in spacer rows
+
+
+        # put in smp CBOC rows
+
+
+        # adjust bottom border of last row
+
+
         #####################
 
         # save the current month's excel file
@@ -449,4 +472,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
