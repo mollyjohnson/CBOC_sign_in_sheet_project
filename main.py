@@ -239,7 +239,7 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow):
 ### Description: creates/sets the width/borders/font/alignment for each cell
 ### in each date column. adjusts for if that date is a federal holiday or weekend
 ###################################################################
-def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
+def createDateCols(ws, endCol, startDate, dayDate, holidayDates, weekendDates):
     #to get name of day (in number) from date
     # to get name of day from date
     dateNum = startDate
@@ -264,7 +264,10 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth
 
         # check if is weekend or holiday
-        if((isWeekend(dayName) == True) or (isHoliday(holidayDates, dateNum) == True)):
+        if(isWeekend(dayName) == True):
+            weekendDates.append(dateNum)
+            setFixedWeekendAndHolStyle(ws, curCol - 1, curRow)
+        elif(isHoliday(holidayDates, dateNum) == True):
             setFixedWeekendAndHolStyle(ws, curCol - 1, curRow)
 
         # increment to get to first column of new date
@@ -278,7 +281,7 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
         dayName = calendar.day_abbr[dayDate]
         dayName = dayName.upper()
 
-    return dayDate
+    return dayDate, weekendDates
 
 ####################################################################
 ### Function Title: getStartDate()
@@ -542,8 +545,12 @@ def main():
         dayDate = dateTimeObj.weekday()
 
         # update day date to be last day date from first sheet before passing to second sheet
-        dayDate = createDateCols(ws1, MID_DATE, 1, dayDate, holidayDates)
-        createDateCols(ws2, endDate - MID_DATE, MID_DATE + 1, dayDate, holidayDates)
+        # also get weekend dates
+        weekendDates = []
+        dayDate, weekendDates = createDateCols(ws1, MID_DATE, 1, dayDate, holidayDates, weekendDates)
+        dayDate, weekendDates = createDateCols(ws2, endDate - MID_DATE, MID_DATE + 1, dayDate, holidayDates, weekendDates)
+
+        print(weekendDates)
 
         # create header for both sheets
         createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
