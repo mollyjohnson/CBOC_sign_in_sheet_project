@@ -64,6 +64,8 @@ BIG_SPACE_BORDER = Border(left = THICK, right = THICK, bottom = DOUBLE)
 SPACER_BORDER = Border(left = THICK, right = THICK)
 CBOC_NAME_ONLY_BORDER = Border(top = DOUBLE, left = THICK, right = THICK, bottom = THIN)
 FROZEN_ONLY_BORDER = Border(left = THICK, right = THICK, bottom = DOUBLE)
+FROZEN_SMP_BORDER = Border(left = THICK, right = THICK, top = THIN, bottom = THIN)
+SMP_ONLY_BORDER = Border(left = THICK, right = THICK, bottom = DOUBLE)
 BOTTOM_ROW_BORDER_CBOC_NAME = Border(left = THICK, right = THICK, bottom = THICK)
 DATE_FONT = Font(name = 'Calibri', size = 11, bold = True)
 TECH_FONT = Font(name = 'Calibri', size = 9)
@@ -400,8 +402,9 @@ def setVariableRowHeights(ws, nonSmpCbocs, SmpCbocs):
         # set height for SMP portion
         ws.row_dimensions[curRow].height = SMP_ROW_HEIGHT
         curRow += 1
-        # set height for spacer portion
-        ws.row_dimensions[curRow].height = SPACER_ROW_HEIGHT
+        # set height for spacer portion unless last row
+        if(curRow < endRow):
+            ws.row_dimensions[curRow].height = SPACER_ROW_HEIGHT
         curRow += 1
 
 ####################################################################
@@ -415,6 +418,8 @@ def createCBOCColBorders(ws, noSMPCBOCs, smpCBOCs):
     endNonSmpRows = NUM_FIXED_ROWS + (len(noSMPCBOCs) * 3) 
     endRow = endNonSmpRows + (len(smpCBOCs) * 4) - 1
     curCBOCIdx = 0
+    
+    # put in borders and values for non smp cbocs
     while(curRow < endNonSmpRows):
         # put in cboc name as value and border
         ws.cell(row = curRow, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
@@ -431,7 +436,35 @@ def createCBOCColBorders(ws, noSMPCBOCs, smpCBOCs):
 
         # put in spacer border
         ws.cell(row = curRow, column = CBOC_COL).border = SPACER_BORDER
-        curRow +=1
+        curRow += 1
+
+    # put in borders and values for smp cbocs
+    curCBOCIdx = 0
+    while(curRow < endRow):
+        # put in cboc name as value and border
+        ws.cell(row = curRow, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+        ws.cell(row = curRow, column = CBOC_COL).border = CBOC_NAME_ONLY_BORDER
+        ws.cell(row = curRow, column = CBOC_COL).value = smpCBOCs[curCBOCIdx]
+        curCBOCIdx += 1
+        curRow += 1
+
+        # put in frozen value and border
+        ws.cell(row = curRow, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+        ws.cell(row = curRow, column = CBOC_COL).border = FROZEN_SMP_BORDER
+        ws.cell(row = curRow, column = CBOC_COL).value = FZ
+        curRow += 1 
+
+        # put in SMP value and border
+        ws.cell(row = curRow, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+        ws.cell(row = curRow, column = CBOC_COL).value = SMP
+        ws.cell(row = curRow, column = CBOC_COL).border = SMP_ONLY_BORDER
+        ws.cell(row = curRow, column = CBOC_COL).alignment = Alignment(horizontal='left',vertical='center')
+        curRow += 1
+
+        # put in spacer border (unless last row)
+        if(curRow < endRow):
+            ws.cell(row = curRow, column = CBOC_COL).border = SPACER_BORDER
+        curRow += 1
 
 ####################################################################
 ### Function Title: main()
