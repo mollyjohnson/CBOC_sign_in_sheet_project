@@ -231,6 +231,10 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
         curRow += 1
 
+def setVariableWeekendAndHolStyle(ws, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, endCol):
+    # adjust fill color and col width for all rows in the column
+    
+
 ####################################################################
 ### Function Title: createDateCols()
 ### Arguments: worksheet, end column, date time object, start date,
@@ -487,6 +491,24 @@ def createBottomRowBorder(ws, noSMPCBOCs, smpCBOCs, endDate):
         curCol += 1
 
 ####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+#def setNonSMPBorders(ws, noSMPCBOCs, smpCBOCs, endCol):
+
+
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+#def setSMPBorders(ws, noSMPCBOCs, smpCBOCs, endCol):
+
+
+####################################################################
 ### Function Title: main()
 ### Arguments: none
 ### Returns: none
@@ -550,8 +572,6 @@ def main():
         dayDate, weekendDates = createDateCols(ws1, MID_DATE, 1, dayDate, holidayDates, weekendDates)
         dayDate, weekendDates = createDateCols(ws2, endDate - MID_DATE, MID_DATE + 1, dayDate, holidayDates, weekendDates)
 
-        print(weekendDates)
-
         # create header for both sheets
         createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
         createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
@@ -565,18 +585,20 @@ def main():
         createCBOCColBorders(ws2, noSMPCBOCs, smpCBOCs)
 
         # put in non-smp CBOC borders
-
+        #setNonSMPBorders(ws1, noSMPCBOCs, smpCBOCs, MID_DATE * 2)
+        #setNonSMPBorders(ws2, noSMPCBOCs, smpCBOCs, MID_DATE * 2)
 
         # put in smp CBOC borders
-
+        #setSMPBorders(ws1, noSMPCBOCs, smpCBOCs, (endDate - MID_DATE) * 2)
+        #setSMPBorders(ws2, noSMPCBOCs, smpCBOCs, (endDate - MID_DATE) * 2)
 
         # adjust bottom border of last row
         createBottomRowBorder(ws1, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
         createBottomRowBorder(ws2, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1)
 
         # put in grey fill in background of weekends/holidays
-
-        #####################
+        setVariableWeekendAndHolStyle(ws1, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
+        setVariableWeekendAndHolStyle(ws2, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1) 
 
         # save the current month's excel file
         saveExcelFile(currMonth, currYear, wb, dateTimeObj)
