@@ -137,4 +137,4 @@ pyproject.toml
 #*.xlsx
 
 # vs code settings
-.vscode/settings.json
+*.vscode/settings.json
