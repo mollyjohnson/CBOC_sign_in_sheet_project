@@ -66,7 +66,7 @@ CBOC_NAME_ONLY_BORDER = Border(top = DOUBLE, left = THICK, right = THICK, bottom
 FROZEN_ONLY_BORDER = Border(left = THICK, right = THICK, bottom = DOUBLE)
 FROZEN_SMP_BORDER = Border(left = THICK, right = THICK, top = THIN, bottom = THIN)
 SMP_ONLY_BORDER = Border(left = THICK, right = THICK, bottom = DOUBLE)
-BOTTOM_ROW_BORDER_CBOC_NAME = Border(left = THICK, right = THICK, bottom = THICK)
+BOTTOM_ROW_BORDER = Border(top = THICK)
 DATE_FONT = Font(name = 'Calibri', size = 11, bold = True)
 TECH_FONT = Font(name = 'Calibri', size = 9)
 TOA_FONT = Font(name = 'Calibri', size = 5)
@@ -434,8 +434,9 @@ def createCBOCColBorders(ws, noSMPCBOCs, smpCBOCs):
         ws.cell(row = curRow, column = CBOC_COL).value = FZ
         curRow += 1
 
-        # put in spacer border
-        ws.cell(row = curRow, column = CBOC_COL).border = SPACER_BORDER
+        # put in spacer border (unless last row)
+        if(endNonSmpRows != endRow):
+            ws.cell(row = curRow, column = CBOC_COL).border = SPACER_BORDER
         curRow += 1
 
     # put in borders and values for smp cbocs
@@ -465,6 +466,22 @@ def createCBOCColBorders(ws, noSMPCBOCs, smpCBOCs):
         if(curRow < endRow):
             ws.cell(row = curRow, column = CBOC_COL).border = SPACER_BORDER
         curRow += 1
+
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+def createBottomRowBorder(ws, noSMPCBOCs, smpCBOCs, endDate):
+    endNonSmpRows = NUM_FIXED_ROWS + (len(noSMPCBOCs) * 3) 
+    endRow = endNonSmpRows + (len(smpCBOCs) * 4) - 1
+    endCol = endDate
+    curCol = CBOC_COL
+
+    while(curCol <= endCol):
+        ws.cell(row = endRow + 1, column = curCol).border = BOTTOM_ROW_BORDER
+        curCol += 1
 
 ####################################################################
 ### Function Title: main()
@@ -543,17 +560,12 @@ def main():
         # put in non-smp CBOC borders
 
 
-        # put in frozen borders
-
-
-        # put in spacer borders
-
-
         # put in smp CBOC borders
 
 
         # adjust bottom border of last row
-
+        createBottomRowBorder(ws1, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
+        createBottomRowBorder(ws2, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1)
 
         # put in grey fill in background of weekends/holidays
 
