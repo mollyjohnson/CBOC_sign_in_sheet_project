@@ -247,7 +247,6 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates):
     # make start col and row 2 since dates start after CBOC col and header row
     curRow = 2
     curCol = 2
-    #regColWidth = 3.67
     regColWidth = 4.5 
     while (curCol <= (endCol * 2)):
         
@@ -373,7 +372,66 @@ def setFixedRowHeights(ws):
 ### Returns:
 ### Description: 
 ###################################################################
+def setVariableRowHeights(ws, nonSmpCbocs, SmpCbocs):
+    curRow = CBOC_NAME_START_ROW
+    endNonSmpRows = NUM_FIXED_ROWS + (len(nonSmpCbocs) * 3) 
+    endRow = endNonSmpRows + (len(SmpCbocs) * 4) - 1
 
+    # set row heights for non SMP cboc section
+    while (curRow <= endNonSmpRows):
+        # set height for cboc name portion
+        ws.row_dimensions[curRow].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT 
+        curRow += 1
+        # set height for frozen portion
+        ws.row_dimensions[curRow].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT
+        curRow += 1
+        # set height for spacer portion
+        ws.row_dimensions[curRow].height = SPACER_ROW_HEIGHT
+        curRow +=1
+
+    # set row heights for SMP cboc section
+    while (curRow <= endRow):
+        # set height for cboc name portion
+        ws.row_dimensions[curRow].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT
+        curRow += 1
+        # set height for frozen portion
+        ws.row_dimensions[curRow].height = CBOC_NAME_AND_FROZEN_ROW_HEIGHT
+        curRow += 1
+        # set height for SMP portion
+        ws.row_dimensions[curRow].height = SMP_ROW_HEIGHT
+        curRow += 1
+        # set height for spacer portion
+        ws.row_dimensions[curRow].height = SPACER_ROW_HEIGHT
+        curRow += 1
+
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+###################################################################
+def createCBOCColBorders(ws, noSMPCBOCs, smpCBOCs):
+    curRow = CBOC_NAME_START_ROW
+    endNonSmpRows = NUM_FIXED_ROWS + (len(noSMPCBOCs) * 3) 
+    endRow = endNonSmpRows + (len(smpCBOCs) * 4) - 1
+    curCBOCIdx = 0
+    while(curRow < endNonSmpRows):
+        # put in cboc name as value and border
+        ws.cell(row = curRow, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+        ws.cell(row = curRow, column = CBOC_COL).border = CBOC_NAME_ONLY_BORDER
+        ws.cell(row = curRow, column = CBOC_COL).value = noSMPCBOCs[curCBOCIdx]
+        curCBOCIdx += 1
+        curRow += 1
+
+        # put in frozen value and border
+        ws.cell(row = curRow, column = CBOC_COL).font = TIMES_NEW_ROMAN_FONT
+        ws.cell(row = curRow, column = CBOC_COL).border = FROZEN_ONLY_BORDER
+        ws.cell(row = curRow, column = CBOC_COL).value = FZ
+        curRow += 1
+
+        # put in spacer border
+        ws.cell(row = curRow, column = CBOC_COL).border = SPACER_BORDER
+        curRow +=1
 
 ####################################################################
 ### Function Title: main()
@@ -441,20 +499,30 @@ def main():
         createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
         createHeader(ws2, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, ((endDate - MID_DATE) * 2) + 1, dateTimeObj)
 
-        # put in non-smp CBOC rows
+        # set row heights for the variable portions of sheet
+        setVariableRowHeights(ws1, noSMPCBOCs, smpCBOCs)
+        setVariableRowHeights(ws2, noSMPCBOCs, smpCBOCs)
+
+        # put in cboc name row values and borders
+        createCBOCColBorders(ws1, noSMPCBOCs, smpCBOCs)
+        createCBOCColBorders(ws2, noSMPCBOCs, smpCBOCs)
+
+        # put in non-smp CBOC borders
 
 
-        # put in frozen rows
+        # put in frozen borders
 
 
-        # put in spacer rows
+        # put in spacer borders
 
 
-        # put in smp CBOC rows
+        # put in smp CBOC borders
 
 
         # adjust bottom border of last row
 
+
+        # put in grey fill in background of weekends/holidays
 
         #####################
 

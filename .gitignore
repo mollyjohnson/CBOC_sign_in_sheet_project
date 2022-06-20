@@ -135,3 +135,6 @@ pyproject.toml
 
 # excel files
 #*.xlsx
+
+# vs code settings
+.vscode/settings.json
