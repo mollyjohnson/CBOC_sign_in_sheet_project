@@ -232,10 +232,19 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow, endNonSmpRows, endRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
         curRow += 1
 
+    nonSMPspacerRow = curRow + 2
     # adjust fill color and col width for all rows in the column up to the last row 
     while(curRow <= endNonSmpRows):
         ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
         ws.cell(row = curRow, column = curCol + 1).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+
+        if(nonSMPspacerRow != curRow):
+            ws.cell(row = curRow, column = curCol).value = "X"
+            ws.cell(row = curRow, column = curCol + 1).value = "X"
+            ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
+            ws.cell(row = curRow, column = curCol + 1).font = Font(name = 'Calibri', size = 15, bold = True)
+            nonSMPspacerRow += 3
+
         curRow += 1
 
     while(curRow <= endRow):
