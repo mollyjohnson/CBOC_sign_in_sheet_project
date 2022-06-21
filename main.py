@@ -15,6 +15,7 @@
 ###################################################################
 
 # import necessary libraries 
+from winreg import ExpandEnvironmentStrings
 from openpyxl import Workbook
 from datetime import datetime
 import calendar
@@ -222,7 +223,7 @@ def setDateInfo(ws, curCol, dayDate, dayName, dateNum, curRow):
 ### all cells in the column, and places x's in the signature/time areas,
 ### since no CBOC's are received on weekends or federal holidays
 ####################################################################
-def setFixedWeekendAndHolStyle(ws, curCol, curRow):
+def setFixedWeekendAndHolStyle(ws, curCol, curRow, endNonSmpRows, endRow):
     # adjust fill color and col width for all rows in the column
     while(curRow <= NUM_FIXED_ROWS):
         ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
@@ -231,9 +232,26 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
         curRow += 1
 
-def setVariableWeekendAndHolStyle(ws, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, endCol):
-    # adjust fill color and col width for all rows in the column
-    
+    # adjust fill color and col width for all rows in the column up to the last row 
+    while(curRow <= endNonSmpRows):
+        ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        ws.cell(row = curRow, column = curCol + 1).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        curRow += 1
+
+    while(curRow <= endRow):
+        ws.cell(row = curRow, column = curCol).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        ws.cell(row = curRow, column = curCol + 1).fill = WEEKEND_AND_HOLIDAY_FILL_COLOR      
+        curRow += 1
+
+
+#def setVariableWeekendAndHolStyle(ws, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, endCol):
+   # adjust fill color and col width for all rows in the column
+    #curRow = CBOC_NAME_START_ROW
+    #endNonSmpRows = NUM_FIXED_ROWS + (len(noSMPCBOCs) * 3) 
+    #endRow = endNonSmpRows + (len(smpCBOCs) * 4) - 1
+
+    # start with column 1
+    #curCol = 1
 
 ####################################################################
 ### Function Title: createDateCols()
@@ -243,7 +261,7 @@ def setVariableWeekendAndHolStyle(ws, holidayDates, weekendDates, noSMPCBOCs, sm
 ### Description: creates/sets the width/borders/font/alignment for each cell
 ### in each date column. adjusts for if that date is a federal holiday or weekend
 ###################################################################
-def createDateCols(ws, endCol, startDate, dayDate, holidayDates, weekendDates):
+def createDateCols(ws, endCol, startDate, dayDate, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs):
     #to get name of day (in number) from date
     # to get name of day from date
     dateNum = startDate
@@ -254,6 +272,9 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates, weekendDates):
     curRow = 2
     curCol = 2
     regColWidth = 4.5 
+
+    endNonSmpRows = NUM_FIXED_ROWS + (len(noSMPCBOCs) * 3) 
+    endRow = endNonSmpRows + (len(smpCBOCs) * 4) - 1
     while (curCol <= (endCol * 2)):
         
         ws.column_dimensions[get_column_letter(curCol)].width = regColWidth 
@@ -270,9 +291,9 @@ def createDateCols(ws, endCol, startDate, dayDate, holidayDates, weekendDates):
         # check if is weekend or holiday
         if(isWeekend(dayName) == True):
             weekendDates.append(dateNum)
-            setFixedWeekendAndHolStyle(ws, curCol - 1, curRow)
+            setFixedWeekendAndHolStyle(ws, curCol - 1, curRow, endNonSmpRows, endRow)
         elif(isHoliday(holidayDates, dateNum) == True):
-            setFixedWeekendAndHolStyle(ws, curCol - 1, curRow)
+            setFixedWeekendAndHolStyle(ws, curCol - 1, curRow, endNonSmpRows, endRow)
 
         # increment to get to first column of new date
         curCol += 1
@@ -569,8 +590,8 @@ def main():
         # update day date to be last day date from first sheet before passing to second sheet
         # also get weekend dates
         weekendDates = []
-        dayDate, weekendDates = createDateCols(ws1, MID_DATE, 1, dayDate, holidayDates, weekendDates)
-        dayDate, weekendDates = createDateCols(ws2, endDate - MID_DATE, MID_DATE + 1, dayDate, holidayDates, weekendDates)
+        dayDate, weekendDates = createDateCols(ws1, MID_DATE, 1, dayDate, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs)
+        dayDate, weekendDates = createDateCols(ws2, endDate - MID_DATE, MID_DATE + 1, dayDate, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs)
 
         # create header for both sheets
         createHeader(ws1, HEADER_ROW, HEADER_AND_LABELS_COL, HEADER_ROW, (MID_DATE * 2) + 1, dateTimeObj)
@@ -597,8 +618,8 @@ def main():
         createBottomRowBorder(ws2, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1)
 
         # put in grey fill in background of weekends/holidays
-        setVariableWeekendAndHolStyle(ws1, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
-        setVariableWeekendAndHolStyle(ws2, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1) 
+        #setVariableWeekendAndHolStyle(ws1, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
+        #setVariableWeekendAndHolStyle(ws2, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1) 
 
         # save the current month's excel file
         saveExcelFile(currMonth, currYear, wb, dateTimeObj)
