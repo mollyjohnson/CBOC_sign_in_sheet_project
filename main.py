@@ -99,13 +99,35 @@ def createSignatureBorders(ws, endCol, noSMPCBOCs, smpCBOCs):
         endNonSmpRows = endRow
 
     while(curCol <= endCol):
+        curRow = CBOC_NAME_START_ROW
+
         nonSMPspacerRow = curRow + 2
         nonSMPFrozenRow = curRow + 1 
         while(curRow <= endNonSmpRows):
+            # if it's a frozen row
+            if(nonSMPFrozenRow == curRow):
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT 
+                nonSMPFrozenRow += 3
 
-            if(nonSMPspacerRow != curRow):
+            # else if it's a spacer row
+            elif(nonSMPspacerRow == curRow):
+            # set left col border
+                ws.cell(row = curRow, column = curCol).border = SPACER_BORDER_LEFT
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SPACER_BORDER_RIGHT
                 nonSMPspacerRow += 3
-                nonSMPFrozenRow += 2
+
+            # else is a cboc name row
+            else:
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_TOP_LEFT
+
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_TOP_RIGHT
+
             curRow += 1
 
         # for smp rows:
@@ -113,10 +135,11 @@ def createSignatureBorders(ws, endCol, noSMPCBOCs, smpCBOCs):
         SMPfrozenRow = curRow + 2
         while(curRow <= endRow):
 
-            if(SMPspacerRow != curRow):
-                SMPspacerRow  += 4
-                SMPfrozenRow += 3
+
             curRow += 1
+
+        # increment cur col by 2 to move onto next date
+        curCol += 2
 
 
 
@@ -290,6 +313,9 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow, endNonSmpRows, endRow):
             ws.cell(row = curRow, column = curCol + 1).value = "X"
             ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
             ws.cell(row = curRow, column = curCol + 1).font = Font(name = 'Calibri', size = 15, bold = True)
+            ws.cell(row = curRow, column = curCol).alignment = Alignment(horizontal='center')
+            ws.cell(row = curRow, column = curCol + 1).alignment = Alignment(horizontal='center')
+        else:
             nonSMPspacerRow += 3
         curRow += 1
 
@@ -304,6 +330,9 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow, endNonSmpRows, endRow):
             ws.cell(row = curRow, column = curCol + 1).value = "X"
             ws.cell(row = curRow, column = curCol).font = Font(name = 'Calibri', size = 15, bold = True)
             ws.cell(row = curRow, column = curCol + 1).font = Font(name = 'Calibri', size = 15, bold = True)
+            ws.cell(row = curRow, column = curCol).alignment = Alignment(horizontal='center')
+            ws.cell(row = curRow, column = curCol + 1).alignment = Alignment(horizontal='center')
+        else:
             SMPspacerRow  += 4
         curRow += 1
 
