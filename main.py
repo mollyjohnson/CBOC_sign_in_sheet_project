@@ -52,7 +52,7 @@ CBOC_ROW = 2
 DATE_ROW = 3
 TECH_TOA_ROW = 4
 CBOC_NAME_START_ROW = 5
-NUM_FIXED_ROWS =4
+NUM_FIXED_ROWS = 4
 
 # set "constant" cell border values
 THIN = Side(border_style = "thin", color = "000000")
@@ -90,6 +90,34 @@ WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = 
 ### Description: 
 ####################################################################
 def createSignatureBorders(ws, endCol, noSMPCBOCs, smpCBOCs):
+    curRow = CBOC_NAME_START_ROW
+    curCol = CBOC_COL + 1
+    endNonSmpRows = NUM_FIXED_ROWS + (len(noSMPCBOCs) * 3) 
+    endRow = endNonSmpRows + (len(smpCBOCs) * 4) - 1
+
+    if(endNonSmpRows > endRow):
+        endNonSmpRows = endRow
+
+    while(curCol <= endCol):
+        nonSMPspacerRow = curRow + 2
+        nonSMPFrozenRow = curRow + 1 
+        while(curRow <= endNonSmpRows):
+
+            if(nonSMPspacerRow != curRow):
+                nonSMPspacerRow += 3
+                nonSMPFrozenRow += 2
+            curRow += 1
+
+        # for smp rows:
+        SMPspacerRow = curRow + 3
+        SMPfrozenRow = curRow + 2
+        while(curRow <= endRow):
+
+            if(SMPspacerRow != curRow):
+                SMPspacerRow  += 4
+                SMPfrozenRow += 3
+            curRow += 1
+
 
 
 ####################################################################
@@ -581,8 +609,6 @@ def main():
         # calculate holiday dates for the month
         holidayDates = []
         holidayDates = federalHolidayCalculator.calcFedHolidays(dateTimeObj) 
-
-        #####################
 
         # set row heights for fixed portions of sheet
         setFixedRowHeights(ws1)
