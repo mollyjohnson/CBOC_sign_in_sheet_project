@@ -82,7 +82,8 @@ SIGNATURE_BORDER_BOTTOM_RIGHT = Border(right = THICK, left = THIN, bottom = DOUB
 SPACER_BORDER_LEFT = Border(right = THIN, left = THICK)
 SPACER_BORDER_RIGHT = Border(right = THICK, left = THIN)
 WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = "BFBFBF", end_color = "BFBFBF")
-
+SMP_FROZEN_BORDER_LEFT = Border(left = THICK, top = THIN, bottom = THIN, right = THIN)
+SMP_FROZEN_BORDER_RIGHT = Border(left = THIN, right = THICK, top = THIN, bottom = THIN)
 ####################################################################
 ### Function Title:
 ### Arguments:
@@ -132,16 +133,45 @@ def createSignatureBorders(ws, endCol, noSMPCBOCs, smpCBOCs):
 
         # for smp rows:
         SMPspacerRow = curRow + 3
-        SMPfrozenRow = curRow + 2
+        SMPfrozenRow = curRow + 1
+        SMPSMPRow = curRow + 2
         while(curRow <= endRow):
+            # if it's a frozen row
+            if(SMPfrozenRow == curRow):
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = SMP_FROZEN_BORDER_LEFT
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SMP_FROZEN_BORDER_RIGHT
+                SMPfrozenRow += 4
 
+            # else if it's a spacer row
+            elif(SMPspacerRow == curRow):
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = SPACER_BORDER_LEFT
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SPACER_BORDER_RIGHT
+                SMPspacerRow += 4
+
+            # else if it's an smp row
+            elif(SMPSMPRow == curRow):
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_BOTTOM_LEFT
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_BOTTOM_RIGHT
+                SMPSMPRow += 4
+
+            # else is a cboc name row
+            else:
+                # set left col border
+                ws.cell(row = curRow, column = curCol).border = SIGNATURE_BORDER_TOP_LEFT
+
+                # set right col border
+                ws.cell(row = curRow, column = curCol + 1).border = SIGNATURE_BORDER_TOP_RIGHT
 
             curRow += 1
 
         # increment cur col by 2 to move onto next date
         curCol += 2
-
-
 
 ####################################################################
 ### Function Title:
