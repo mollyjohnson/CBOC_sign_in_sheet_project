@@ -89,7 +89,7 @@ WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = 
 ### Returns:
 ### Description: 
 ####################################################################
-#def createSignatureBorders(ws, endCol, noSMPCBOCs, smpCBOCs):
+def createSignatureBorders(ws, endCol, noSMPCBOCs, smpCBOCs):
 
 
 ####################################################################
@@ -613,16 +613,12 @@ def main():
         createCBOCColBorders(ws1, noSMPCBOCs, smpCBOCs)
         createCBOCColBorders(ws2, noSMPCBOCs, smpCBOCs)
 
-        #createSignatureBorders(ws1, MID_DATE * 2, noSMPCBOCs, smpCBOCs)
-        #createSignatureBorders(ws2, (endDate - MID_DATE) * 2, noSMPCBOCs, smpCBOCs)
+        createSignatureBorders(ws1, MID_DATE * 2, noSMPCBOCs, smpCBOCs)
+        createSignatureBorders(ws2, (endDate - MID_DATE) * 2, noSMPCBOCs, smpCBOCs)
 
         # adjust bottom border of last row
         createBottomRowBorder(ws1, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
         createBottomRowBorder(ws2, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1)
-
-        # put in grey fill in background of weekends/holidays
-        #setVariableWeekendAndHolStyle(ws1, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
-        #setVariableWeekendAndHolStyle(ws2, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, ((endDate - MID_DATE) * 2) + 1) 
 
         # save the current month's excel file
         saveExcelFile(currMonth, currYear, wb, dateTimeObj)
