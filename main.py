@@ -83,6 +83,21 @@ SPACER_BORDER_LEFT = Border(right = THIN, left = THICK)
 SPACER_BORDER_RIGHT = Border(right = THICK, left = THIN)
 WEEKEND_AND_HOLIDAY_FILL_COLOR = PatternFill(fill_type = "solid", start_color = "BFBFBF", end_color = "BFBFBF")
 
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
+#def createSignatureBorders(ws, endCol, noSMPCBOCs, smpCBOCs):
+
+
+####################################################################
+### Function Title:
+### Arguments:
+### Returns:
+### Description: 
+####################################################################
 def createHeader(ws, startRow, startCol, endRow, endCol, startDateObj):
     # create header border formatting
     headerBorderLeft = Border(top = THICK , left = THICK, right = None, bottom = THICK) 
@@ -232,6 +247,9 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow, endNonSmpRows, endRow):
         ws.column_dimensions[get_column_letter(curCol + 1)].width = WEEKEND_AND_HOLIDAY_COL_WIDTH
         curRow += 1
 
+    if(endNonSmpRows > endRow):
+        endNonSmpRows = endRow
+
     # adjust fill color and col width for all rows in the column up to the last row 
     # for non smp rows:
     nonSMPspacerRow = curRow + 2
@@ -260,16 +278,6 @@ def setFixedWeekendAndHolStyle(ws, curCol, curRow, endNonSmpRows, endRow):
             ws.cell(row = curRow, column = curCol + 1).font = Font(name = 'Calibri', size = 15, bold = True)
             SMPspacerRow  += 4
         curRow += 1
-
-
-#def setVariableWeekendAndHolStyle(ws, holidayDates, weekendDates, noSMPCBOCs, smpCBOCs, endCol):
-   # adjust fill color and col width for all rows in the column
-    #curRow = CBOC_NAME_START_ROW
-    #endNonSmpRows = NUM_FIXED_ROWS + (len(noSMPCBOCs) * 3) 
-    #endRow = endNonSmpRows + (len(smpCBOCs) * 4) - 1
-
-    # start with column 1
-    #curCol = 1
 
 ####################################################################
 ### Function Title: createDateCols()
@@ -530,24 +538,6 @@ def createBottomRowBorder(ws, noSMPCBOCs, smpCBOCs, endDate):
         curCol += 1
 
 ####################################################################
-### Function Title:
-### Arguments:
-### Returns:
-### Description: 
-###################################################################
-#def setNonSMPBorders(ws, noSMPCBOCs, smpCBOCs, endCol):
-
-
-####################################################################
-### Function Title:
-### Arguments:
-### Returns:
-### Description: 
-###################################################################
-#def setSMPBorders(ws, noSMPCBOCs, smpCBOCs, endCol):
-
-
-####################################################################
 ### Function Title: main()
 ### Arguments: none
 ### Returns: none
@@ -623,13 +613,8 @@ def main():
         createCBOCColBorders(ws1, noSMPCBOCs, smpCBOCs)
         createCBOCColBorders(ws2, noSMPCBOCs, smpCBOCs)
 
-        # put in non-smp CBOC borders
-        #setNonSMPBorders(ws1, noSMPCBOCs, smpCBOCs, MID_DATE * 2)
-        #setNonSMPBorders(ws2, noSMPCBOCs, smpCBOCs, MID_DATE * 2)
-
-        # put in smp CBOC borders
-        #setSMPBorders(ws1, noSMPCBOCs, smpCBOCs, (endDate - MID_DATE) * 2)
-        #setSMPBorders(ws2, noSMPCBOCs, smpCBOCs, (endDate - MID_DATE) * 2)
+        #createSignatureBorders(ws1, MID_DATE * 2, noSMPCBOCs, smpCBOCs)
+        #createSignatureBorders(ws2, (endDate - MID_DATE) * 2, noSMPCBOCs, smpCBOCs)
 
         # adjust bottom border of last row
         createBottomRowBorder(ws1, noSMPCBOCs, smpCBOCs, (MID_DATE * 2) + 1)
